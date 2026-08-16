@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 1: KLIMAAT</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+    .container { max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .badge { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 11px; margin-bottom: 1rem; }
+    
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 0.75rem; margin-bottom: 10px; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; margin-bottom: 0.25rem; }
+    .vocab-item .soort { font-size: 11px; color: #666; }
+    .vocab-item .voorbeeld { font-size: 11px; color: #999; font-style: italic; margin-top: 0.25rem; }
+    
+    .button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .button-primary { background: #1976d2; color: white; }
+    .button-primary:hover { background: #1565c0; }
+    .button-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; }
+    .button-secondary:hover { background: #e8e8e8; }
+    .button:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .question-card { background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 15px; line-height: 1.6; }
+    .option { margin-bottom: 10px; }
+    .option input { margin-right: 8px; cursor: pointer; }
+    .option label { cursor: pointer; font-size: 14px; display: inline-block; width: calc(100% - 24px); }
+    
+    .feedback { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; }
+    .feedback-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; margin-bottom: 1.5rem; }
+    .results-score { font-size: 36px; font-weight: 500; margin-bottom: 0.5rem; }
+    .results.excellent { color: #2e7d32; background: #e8f5e9; }
+    .results.good { color: #f57f17; background: #fff3e0; }
+    .results.weak { color: #c62828; background: #ffebee; }
+    .results-text { font-size: 13px; margin-top: 0.5rem; }
+    
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .type-tag { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 11px; font-weight: 500; margin-right: 0.5rem; }
+    .type-tag.app { background: #bbdefb; color: #0d47a1; }
+    .type-tag.challenge { background: #ffccbc; color: #bf360c; }
+    .itna-tag { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 10px; background: #f0f0f0; color: #555; margin-left: 0.5rem; }
+    
+    .button-group { display: flex; gap: 8px; }
+    .button-group .button { flex: 1; }
+    
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="vocabScreen">
+      <div class="header">
+        <h1>Dag 1: KLIMAAT</h1>
+        <p>17 augustus — 20 woorden te leren</p>
+      </div>
+      
+      <div class="badge">ZELFSTANDIGE NAAMWOORDEN (8)</div>
+      <div id="vocabNamen"></div>
+      
+      <div class="badge">WERKWOORDEN (6)</div>
+      <div id="vocabVerben"></div>
+      
+      <div class="badge">ADJECTIEVEN & BIJWOORDEN (4)</div>
+      <div id="vocabAdjb"></div>
+      
+      <div class="badge">UITDRUKKINGEN (2)</div>
+      <div id="vocabExpr"></div>
+      
+      <button class="button button-primary" onclick="startTest()">Start de test</button>
+    </div>
+
+    <div id="testScreen" class="hidden">
+      <div class="progress">Vraag <span id="qNumber">1</span>/10</div>
+      
+      <div class="question-card">
+        <div style="margin-bottom: 0.75rem;">
+          <span class="type-tag" id="typeTag">TOEPASSING</span>
+          <span class="itna-tag" id="itnaTag"></span>
+        </div>
+        
+        <div class="question-text" id="questionText"></div>
+        
+        <div id="optionsContainer"></div>
+      </div>
+      
+      <div id="feedbackContainer"></div>
+      
+      <div class="button-group">
+        <button class="button button-secondary" id="prevBtn" onclick="prevQuestion()">Vorige</button>
+        <button class="button button-primary" id="nextBtn" onclick="nextQuestion()">Volgende</button>
+      </div>
+    </div>
+
+    <div id="resultsScreen" class="hidden">
+      <h1 style="margin-bottom: 1.5rem;">Resultaten Dag 1</h1>
+      
+      <div class="results" id="resultsBox">
+        <div class="results-score" id="scoreDisplay">0/10</div>
+        <div class="results-text" id="scoreText"></div>
+      </div>
+      
+      <button class="button button-primary" onclick="restart()">Opnieuw beginnen</button>
+    </div>
+  </div>
+
+  <script>
+    const vocab = [
+      { nl: 'hittegolf', soort: 'zelfst. naamwoord', eng: 'heat wave', voorbeeld: 'De hittegolf zorgde voor veel gezondheidsrisico\'s.' },
+      { nl: 'transitie', soort: 'zelfst. naamwoord', eng: 'transition', voorbeeld: 'De energietransitie is urgent.' },
+      { nl: 'fossiele brandstof', soort: 'zelfst. naamwoord', eng: 'fossil fuel', voorbeeld: 'We moeten fossiele brandstoffen vervangen.' },
+      { nl: 'uitstoot', soort: 'zelfst. naamwoord', eng: 'emission', voorbeeld: 'De uitstoot van CO2 is te hoog.' },
+      { nl: 'weerbaarheid', soort: 'zelfst. naamwoord', eng: 'resilience', voorbeeld: 'Weerbaarheid tegen klimaatverandering is essentieel.' },
+      { nl: 'droogte', soort: 'zelfst. naamwoord', eng: 'drought', voorbeeld: 'De droogte veroorzaakte gewasschade.' },
+      { nl: 'opwarming', soort: 'zelfst. naamwoord', eng: 'warming', voorbeeld: 'De globale opwarming versnelt.' },
+      { nl: 'verschuiving', soort: 'zelfst. naamwoord', eng: 'shift', voorbeeld: 'Een verschuiving naar groene energie.' },
+      
+      { nl: 'opwarmen', soort: 'werkwoord', eng: 'to warm up', voorbeeld: 'Het klimaat warmt op door broeikasgassen.' },
+      { nl: 'overtreffen', soort: 'werkwoord', eng: 'to exceed', voorbeeld: 'De temperatuur overtreft alle verwachtingen.' },
+      { nl: 'aanpassen', soort: 'werkwoord', eng: 'to adapt', voorbeeld: 'We moeten ons aan het warmer weer aanpassen.' },
+      { nl: 'verminderen', soort: 'werkwoord', eng: 'to reduce', voorbeeld: 'We moeten emissies verminderen.' },
+      { nl: 'versnellen', soort: 'werkwoord', eng: 'to accelerate', voorbeeld: 'De crisis versnelt de transitie.' },
+      { nl: 'verergeren', soort: 'werkwoord', eng: 'to worsen', voorbeeld: 'De droogte verergert het probleem.' },
+      
+      { nl: 'heftig', soort: 'adjectief', eng: 'intense', voorbeeld: 'Heftige hittegolven worden steeds normaal.' },
+      { nl: 'extreem', soort: 'adjectief', eng: 'extreme', voorbeeld: 'Extreem weer is gevaarlijk voor de landbouw.' },
+      { nl: 'geleidelijk', soort: 'bijwoord', eng: 'gradually', voorbeeld: 'Geleidelijk stijgen de temperaturen wereldwijd.' },
+      { nl: 'dringend', soort: 'adjectief', eng: 'urgent', voorbeeld: 'Dringend handelen is nodig om de crisis aan te pakken.' },
+      
+      { nl: 'op korte termijn', soort: 'uitdrukking', eng: 'short-term', voorbeeld: 'Op korte termijn moeten we noodmaatregelen nemen.' },
+      { nl: 'op lange termijn', soort: 'uitdrukking', eng: 'long-term', voorbeeld: 'Op lange termijn is transitie onvermijdelijk.' }
+    ];
+
+    const questions = [
+      {
+        q: 'Het klimaat is de afgelopen jaren heftig __________.',
+        opts: ['opwarmde', 'opgewarmde', 'opgewarmd', 'warming'],
+        ans: 'opgewarmd',
+        uitleg: 'Perfectum van "opwarmen": "is opgewarmd" (deelwoord). Niet "opwarmde" (dat is vorige tijd).',
+        type: 'app',
+        itna: 'Participes (zijn/hebben)'
+      },
+      {
+        q: 'We moeten de CO2-uitstoot __________.',
+        opts: ['verminderen', 'vermindert', 'verminderd', 'vermindering'],
+        ans: 'verminderen',
+        uitleg: 'Modale constructie: "moeten" + werkwoord infinitief. "Vermindering" is zelfst. naamwoord.',
+        type: 'app',
+        itna: 'Infinitief na modalen'
+      },
+      {
+        q: 'Dit is een __________ oplossing voor de energietransitie.',
+        opts: ['dringende', 'dringend', 'dringendheid', 'dringt'],
+        ans: 'dringende',
+        uitleg: 'Adjectief voor vrouwelijk zelfst. naamwoord (oplossing=vrouwelijk). "Dringende" = correct geslacht.',
+        type: 'app',
+        itna: 'Adjectief-geslacht congruentie'
+      },
+      {
+        q: 'De __________ tussen fossiele energie en hernieuwbare energie wordt steeds duidelijker.',
+        opts: ['verschuiving', 'verschuivingen', 'verschoven', 'verschuiven'],
+        ans: 'verschuiving',
+        uitleg: 'Zelfst. naamwoord enkelvoud (artikel "De" → enkelvoud). "Verschoven" is deelwoord.',
+        type: 'app',
+        itna: 'Zelfst. naamwoord vs. deelwoord'
+      },
+      {
+        q: 'Deze droogte is __________ gemaakt door de klimaatverandering.',
+        opts: ['erger', 'erger', 'verergerd', 'verergering'],
+        ans: 'verergerd',
+        uitleg: 'Deelwoord passief: "is verergerd" (perfectum). "Erger" is comparatief (bigger/smaller).',
+        type: 'app',
+        itna: 'Deelwoord passief'
+      },
+      {
+        q: 'De weerbaarheid van landen tegen extreme weerpatronen moet __________.',
+        opts: ['worden verhoogd', 'verhoogt', 'verhoging', 'verhoogde'],
+        ans: 'worden verhoogd',
+        uitleg: 'Modale passief: "moet ... worden verhoogd". Niet "verhoging" (zelfst. naamwoord).',
+        type: 'chal',
+        itna: 'Modale passief (moeten + worden)'
+      },
+      {
+        q: 'De regering stelde dat fossiele brandstoffen __________ vervangen moeten worden.',
+        opts: ['langzaam', 'langzamer', 'langzame', 'snel'],
+        ans: 'langzaam',
+        uitleg: 'Bijwoord (adverbium) voor werkwoord vervangen. "Langzamer" is comparatief (slower).',
+        type: 'chal',
+        itna: 'Bijwoord vs. comparatief'
+      },
+      {
+        q: 'Wetenschappers waarschuwen dat extreme temperaturen zich nog meer zullen __________.',
+        opts: ['voorkomend', 'voorkomen', 'voorkwamen', 'voorgekomen'],
+        ans: 'voorkomen',
+        uitleg: 'Infinitief na "zullen": "zullen voorkomen". Niet vorige tijd.',
+        type: 'chal',
+        itna: 'Infinitief na modalen (zullen)'
+      },
+      {
+        q: 'De __________ naar hernieuwbare energie is onvermijdelijk, maar de __________ zal jaren duren.',
+        opts: ['transitie / implementatie', 'transformatie / implementering', 'transitie / implementering', 'transformatie / implementatie'],
+        ans: 'transitie / implementatie',
+        uitleg: '"Transitie" (standaard term voor energiewisseling). "Implementatie" (zelfst. naamwoord van "implementeren").',
+        type: 'chal',
+        itna: 'Derivaties nominales'
+      },
+      {
+        q: 'Dit beleid is niet alleen __________; het moet ook __________ zijn voor de bevolking.',
+        opts: ['dringend / rechtvaardig', 'dringende / rechtvaardig', 'dringend / rechtvaardigd', 'dringende / rechtvaardigd'],
+        ans: 'dringend / rechtvaardig',
+        uitleg: 'Predicatieve adjectief (na "is" blijft onveranderd). Beide zijn predicatief → geen -e.',
+        type: 'chal',
+        itna: 'Predicatieve vs. attributieve adjectieven'
+      }
+    ];
+
+    let currentQuestion = 0;
+    let responses = {};
+
+    function renderVocab() {
+      const namen = vocab.filter((v, i) => i < 8);
+      const verben = vocab.filter((v, i) => i >= 8 && i < 14);
+      const adjb = vocab.filter((v, i) => i >= 14 && i < 18);
+      const expr = vocab.filter((v, i) => i >= 18);
+
+      document.getElementById('vocabNamen').innerHTML = namen.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="soort">${v.soort} | ${v.eng}</div>
+          <div class="voorbeeld">Voorbeeld: ${v.voorbeeld}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('vocabVerben').innerHTML = verben.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="soort">${v.soort} | ${v.eng}</div>
+          <div class="voorbeeld">Voorbeeld: ${v.voorbeeld}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('vocabAdjb').innerHTML = adjb.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="soort">${v.soort} | ${v.eng}</div>
+          <div class="voorbeeld">Voorbeeld: ${v.voorbeeld}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('vocabExpr').innerHTML = expr.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="soort">${v.soort} | ${v.eng}</div>
+          <div class="voorbeeld">Voorbeeld: ${v.voorbeeld}</div>
+        </div>
+      `).join('');
+    }
+
+    function startTest() {
+      document.getElementById('vocabScreen').classList.add('hidden');
+      document.getElementById('testScreen').classList.remove('hidden');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQuestion = idx;
+      const q = questions[idx];
+      document.getElementById('qNumber').textContent = idx + 1;
+      document.getElementById('typeTag').textContent = q.type === 'app' ? 'TOEPASSING' : 'UITDAGING';
+      document.getElementById('typeTag').className = 'type-tag ' + (q.type === 'app' ? 'app' : 'challenge');
+      document.getElementById('itnaTag').textContent = q.itna;
+      document.getElementById('questionText').textContent = q.q;
+
+      document.getElementById('optionsContainer').innerHTML = q.opts.map((opt, i) => `
+        <div class="option">
+          <input type="radio" name="answer" id="opt${i}" value="${opt}" onchange="selectAnswer('${opt}')">
+          <label for="opt${i}">${opt}</label>
+        </div>
+      `).join('');
+
+      document.getElementById('feedbackContainer').innerHTML = '';
+      document.getElementById('prevBtn').disabled = idx === 0;
+      document.getElementById('nextBtn').textContent = idx === questions.length - 1 ? 'Zie resultaten' : 'Volgende';
+    }
+
+    function selectAnswer(ans) {
+      responses[currentQuestion] = ans;
+      showFeedback();
+    }
+
+    function showFeedback() {
+      const q = questions[currentQuestion];
+      const answer = responses[currentQuestion];
+      if (!answer) return;
+
+      const isCorrect = answer === q.ans;
+      const feedbackDiv = `
+        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+          <div class="feedback-title">${isCorrect ? '✓ Juist!' : '✗ Fout'}</div>
+          <div class="feedback-text"><strong>Antwoord:</strong> ${q.ans}</div>
+          <div class="feedback-text"><strong>Uitleg:</strong> ${q.uitleg}</div>
+        </div>
+      `;
+      document.getElementById('feedbackContainer').innerHTML = feedbackDiv;
+    }
+
+    function nextQuestion() {
+      if (!responses[currentQuestion]) return;
+      if (currentQuestion < questions.length - 1) {
+        renderQuestion(currentQuestion + 1);
+      } else {
+        showResults();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        renderQuestion(currentQuestion - 1);
+      }
+    }
+
+    function showResults() {
+      let correct = 0;
+      questions.forEach((q, i) => {
+        if (responses[i] === q.ans) correct++;
+      });
+      const percent = Math.round((correct / questions.length) * 100);
+
+      document.getElementById('testScreen').classList.add('hidden');
+      document.getElementById('resultsScreen').classList.remove('hidden');
+      document.getElementById('scoreDisplay').textContent = `${correct}/10 (${percent}%)`;
+
+      const resultsBox = document.getElementById('resultsBox');
+      resultsBox.className = 'results';
+      if (percent >= 70) {
+        resultsBox.classList.add('excellent');
+        document.getElementById('scoreText').textContent = '✓ Uitstekend! Ga door naar Dag 2.';
+      } else if (percent >= 56) {
+        resultsBox.classList.add('good');
+        document.getElementById('scoreText').textContent = '→ Goed. Herhaal de vocabulaire van Dag 1.';
+      } else {
+        resultsBox.classList.add('weak');
+        document.getElementById('scoreText').textContent = '✗ Teruglezen nodig. Focus op de uitleggen.';
+      }
+    }
+
+    function restart() {
+      responses = {};
+      currentQuestion = 0;
+      document.getElementById('resultsScreen').classList.add('hidden');
+      document.getElementById('vocabScreen').classList.remove('hidden');
+      renderVocab();
+    }
+
+    renderVocab();
+  </script>
+</body>
+</html>
