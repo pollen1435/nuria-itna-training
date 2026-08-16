@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 2: ENERGIE</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .def { font-size: 11px; color: #666; margin-top: 0.25rem; }
+    
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    .blank { background: #fff3cd; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+    
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; }
+    .option label { cursor: pointer; }
+    
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; font-family: inherit; min-height: 80px; }
+    
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin: 0.25rem 0; }
+    .traduction { font-style: italic; color: #666; margin-top: 0.5rem; }
+    
+    .tip-box { background: #fff3cd; padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; border-left: 3px solid #ffc107; font-size: 13px; }
+    
+    .drop-zone { background: #f0f0f0; border: 2px dashed #1976d2; border-radius: 6px; padding: 1rem; min-height: 50px; margin: 1rem 0; }
+    .word-item { background: white; padding: 8px 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 4px; cursor: move; display: inline-block; user-select: none; }
+    .word-item.placed { background: #bbdefb; border-color: #1976d2; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; }
+    .reading p { margin-bottom: 1rem; text-align: justify; }
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .required-words { background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+    .required-words strong { color: #1976d2; }
+    
+    .rappel-section { background: #fff8e1; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 1.5rem; }
+    .rappel-section h3 { margin-bottom: 1rem; color: #f57f17; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- RAPPEL DAG 1 -->
+    <div id="rappelSection" class="section active">
+      <div class="rappel-section">
+        <h3>📚 Rappel — Dag 1: KLIMAAT</h3>
+        <p style="font-size: 13px; margin-bottom: 1rem; color: #666;">Avant de commencer Dag 2, teste-toi sur le vocabulaire et concepts du Jour 1. Cela renforce ta mémoire!</p>
+      </div>
+      <div class="vocab-grid" id="rappelVocabGrid"></div>
+      <button class="btn btn-primary" onclick="startRappel()">Start rappel (10 vragen)</button>
+    </div>
+
+    <!-- TEST RAPPEL -->
+    <div id="rappelTestSection" class="section">
+      <div class="progress">Rappel Vraag <span id="rappelQNum">1</span>/10</div>
+      <div class="question-card">
+        <div id="rappelQuestionType" class="question-type"></div>
+        <div id="rappelQuestionContent"></div>
+        <div id="rappelFeedbackArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevRappelQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipRappelQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="rappelNextBtn" onclick="nextRappelQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOCABULAIRE DAG 2 -->
+    <div id="vocabSection" class="section">
+      <div class="header">
+        <h1>Dag 2: ENERGIE</h1>
+        <p>18 augustus — 20 woorden + 30 vragen</p>
+      </div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (30 vragen)</button>
+    </div>
+
+    <!-- TEST DAG 2 -->
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/30</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="tipArea"></div>
+        <div id="feedbackArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEZING -->
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <!-- RESULTATEN -->
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 2</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/30</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+    </div>
+  </div>
+
+  <script>
+    const rappelVocab = [
+      { nl: 'hittegolf', def: 'Een periode van extreem hete temperaturen.' },
+      { nl: 'transitie', def: 'Het overgaan van één situatie naar een ander.' },
+      { nl: 'fossiele brandstof', def: 'Energiebron die vervuiling veroorzaakt.' },
+      { nl: 'uitstoot', def: 'Gassen of vervuiling in de atmosfeer.' },
+      { nl: 'weerbaarheid', def: 'Vermogen om tegen klimaatverandering bestand te zijn.' }
+    ];
+
+    const vocab = [
+      { nl: 'nucleair', def: 'Energie afkomstig van atoomkernen.' },
+      { nl: 'SMR', def: 'Small Modular Reactor — kleine kernreactor.' },
+      { nl: 'zonnepaneel', def: 'Apparaat dat zonlicht omzet in elektriciteit.' },
+      { nl: 'windmotor', def: 'Machine die wind omzet in stroom.' },
+      { nl: 'hernieuwbaar', def: 'Energiebron die zich vanzelf vernieuwt.' },
+      { nl: 'fossiel', def: 'Afkomstig uit oude organische materialen.' },
+      { nl: 'duurzaam', def: 'Milieuvriendelijk en langdurig.' },
+      { nl: 'biomassa', def: 'Energie uit organisch afval.' },
+      { nl: 'grid', def: 'Elektriciteitsnetwerk dat energie verdeelt.' },
+      { nl: 'capaciteit', def: 'Vermogen om iets op te slaan of te produceren.' },
+      { nl: 'efficiëntie', def: 'Mate van werkzaamheid; opbrengst per investering.' },
+      { nl: 'intermitterend', def: 'Onderbroken; niet continu.' },
+      { nl: 'opslag', def: 'Het bewaren van energie voor later gebruik.' },
+      { nl: 'bron', def: 'Plaats waar energie vandaan komt.' },
+      { nl: 'verbruik', def: 'Hoeveelheid energie die gebruikt wordt.' },
+      { nl: 'waterkracht', def: 'Energie afkomstig van waterkracht.' },
+      { nl: 'investering', def: 'Geld uitgeven voor toekomstige baten.' },
+      { nl: 'rendement', def: 'Voordeel of opbrengst.' },
+      { nl: 'risicovolle', def: 'Met mogelijke problemen of verliezen.' },
+      { nl: 'fusie', def: 'Samenvoeging van atoomkernen; schoon energiebron.' }
+    ];
+
+    const rappelQuestions = [
+      { type: 'qcm', text: 'De hittegolf in Belgie was het gevolg van __________.', opts: ['klimaatverandering', 'werkloosheid', 'politiek'], ans: 'klimaatverandering', fr: 'changement climatique' },
+      { type: 'fill', text: 'De energie__________ is dringend nodig.', ans: 'transitie', tip: 'Familie: transit, transitie', fr: 'transition' },
+      { type: 'intrus', text: 'Welk woord hoort NIET bij klimaat? hittegolf — opwarming — dringend — koelcentra', opts: ['hittegolf', 'opwarming', 'dringend', 'koelcentra'], ans: 'dringend', fr: 'dringend est un adjectif/adverbe pas un phenomene' },
+      { type: 'qcm', text: 'De weerbaarheid van landen moet worden __________.', opts: ['verhoogd', 'verlaagd', 'verwaarloosd'], ans: 'verhoogd', fr: 'augmentee' },
+      { type: 'fill', text: 'De droogte zal __________ als we niets doen.', ans: 'verergeren', tip: 'Familie: erger, ergeren, verergeren', fr: 's aggraver' },
+      { type: 'qcm', text: 'Op korte termijn moet __________ worden ingesteld.', opts: ['koelcentra', 'kernreactoren', 'zonnepanelen'], ans: 'koelcentra', fr: 'centres de refroidissement' },
+      { type: 'fill', text: 'De politieke spanning __________ de transitie.', ans: 'vertraagt', tip: 'Familie: traag, vertragen, tragere', fr: 'ralentit' },
+      { type: 'qcm', text: 'Welk woord betekent: het vermogen om tegen klimaatverandering bestand te zijn?', opts: ['weerbaarheid', 'heftigheid', 'droogte'], ans: 'weerbaarheid', fr: 'resilience' },
+      { type: 'fill', text: 'De fossiele brandstoffen veroorzaken __________.', ans: 'uitstoot', tip: 'Familie: stoot, uitstoot, stootte', fr: 'emissions' },
+      { type: 'qcm', text: 'De verschuiving naar groene energie is __________.', opts: ['onvermijdelijk', 'vermijdelijk', 'opgesteld'], ans: 'onvermijdelijk', fr: 'inevitable' }
+    ];
+
+    const questions = [
+      { type: 'qcm', text: 'Nucleaire energie is energiebron van __________.', opts: ['atoomkernen', 'biologische afval', 'windkracht'], ans: 'atoomkernen', fr: 'noyaux atomiques' },
+      { type: 'fill', text: 'Belgie plant kleine nucleaire reactoren genaamd __________.', ans: 'SMR', tip: 'Afkorting: Small Modular Reactor', fr: 'Reacteurs Modulaires Petits' },
+      { type: 'intrus', text: 'Welk woord hoort NIET bij hernieuwbare energie? zonnepaneel — windmotor — fossiel — waterkracht', opts: ['zonnepaneel', 'windmotor', 'fossiel', 'waterkracht'], ans: 'fossiel', fr: 'fossiel est une energie non-renouvelable' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['Zonnepanelen', 'en', 'windmotoren', 'zijn', 'intermitterend'], correct: 'Zonnepanelen en windmotoren zijn intermitterend', fr: 'Les panneaux solaires et les moteurs eoliens sont intermittents' },
+      { type: 'qcm', text: 'De efficiëntie van kernenergie is __________.', opts: ['hoog', 'laag', 'gemiddeld'], ans: 'hoog', fr: 'elevee' },
+      { type: 'fill', text: 'Hernieuwbare energie kan worden opgeslagen in een __________.', ans: 'batterij', tip: 'Familie: batterij, batterijen, accu', fr: 'batterie' },
+      { type: 'intrus', text: 'Welke vorm van energieopslag hoort NIET? waterkracht — biomassa — nucleair — opslag', opts: ['waterkracht', 'biomassa', 'nucleair', 'opslag'], ans: 'nucleair', fr: 'nucleair est une source d energie pas une forme de stockage' },
+      { type: 'qcm', text: 'Windmotoren produceren energie __________.', opts: ['intermitterend', 'continu', 'seizoensgebonden'], ans: 'intermitterend', fr: 'en intermittence' },
+      { type: 'fill', text: 'De __________ van het elektriciteitsnetwerk is cruciaal voor stabiliteit.', ans: 'capaciteit', tip: 'Familie: capabel, capaciteit, capaces', fr: 'capacite' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['De', 'investering', 'in', 'duurzame', 'energie', 'is', 'noodzakelijk'], correct: 'De investering in duurzame energie is noodzakelijk', fr: 'L investissement dans l energie durable est necessaire' },
+      { type: 'qcm', text: 'Fusie-energie wordt beschouwd als __________.', opts: ['schoon', 'vervuilend', 'intermitterend'], ans: 'schoon', fr: 'propre' },
+      { type: 'fill', text: 'Zonnepanelen hebben een __________ van 15-20%.', ans: 'rendement', tip: 'Familie: rente, rendement, rentabel', fr: 'rendement' },
+      { type: 'intrus', text: 'Welk woord hoort NIET bij energieverbruik? grid — bron — verbruik — risicovolle', opts: ['grid', 'bron', 'verbruik', 'risicovolle'], ans: 'risicovolle', fr: 'risicovolle est un adjectif pas une partie du systeme' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['De', 'grid', 'moet', 'flexibel', 'zijn'], correct: 'De grid moet flexibel zijn', fr: 'Le reseau doit etre flexible' },
+      { type: 'fill', text: 'Het __________ van hernieuwbare energie is intermitterend.', ans: 'verbruik', tip: 'Familie: verbruiken, verbruik, verbruikte', fr: 'la consommation' },
+      { type: 'qcm', text: 'Biomassa is energie uit __________.', opts: ['organisch afval', 'kernkernen', 'windkracht'], ans: 'organisch afval', fr: 'dechets organiques' },
+      { type: 'fill', text: 'De __________ van kernenergie is continu.', ans: 'productie', tip: 'Familie: produceren, product, productie', fr: 'production' },
+      { type: 'intrus', text: 'Welk woord is GEEN energiebron? zonnepaneel — biomassa — duurzaam — waterkracht', opts: ['zonnepaneel', 'biomassa', 'duurzaam', 'waterkracht'], ans: 'duurzaam', fr: 'duurzaam est un adjectif pas une source' },
+      { type: 'qcm', text: 'Waterkracht wordt beschouwd als __________.', opts: ['hernieuwbaar', 'fossiel', 'nucleair'], ans: 'hernieuwbaar', fr: 'renouvelable' },
+      { type: 'fill', text: 'De __________ van Belgische energie komt steeds meer uit hernieuwbare bronnen.', ans: 'proportie', tip: 'Familie: proportie, proportioneel, proportionele', fr: 'proportion' }
+    ];
+
+    let currentRappelQ = 0;
+    let currentQ = 0;
+    let rappelResponses = {};
+    let responses = {};
+    let rappelScore = 0;
+    let score = 0;
+
+    function renderRappelVocab() {
+      const html = rappelVocab.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="def">${v.def}</div>
+        </div>
+      `).join('');
+      document.getElementById('rappelVocabGrid').innerHTML = html;
+    }
+
+    function startRappel() {
+      document.getElementById('rappelSection').classList.remove('active');
+      document.getElementById('rappelTestSection').classList.add('active');
+      renderRappelQuestion(0);
+    }
+
+    function renderRappelQuestion(idx) {
+      currentRappelQ = idx;
+      const q = rappelQuestions[idx];
+      document.getElementById('rappelQNum').textContent = idx + 1;
+      document.getElementById('rappelQuestionType').textContent = q.type.toUpperCase();
+      document.getElementById('rappelFeedbackArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `
+          <div class="option">
+            <input type="radio" name="rappelAns" value="${o}" id="rappelOpt${i}" onchange="checkRappelAnswer(${idx})">
+            <label for="rappelOpt${i}">${o}</label>
+          </div>
+        `).join('');
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += `<input type="text" class="input-field" id="rappelFillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('rappelFeedbackArea').innerHTML = `<button class="btn-tip" onclick="showRappelTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkRappelAnswer(${idx})">Controleer</button>`;
+      }
+      document.getElementById('rappelQuestionContent').innerHTML = content;
+      document.getElementById('rappelNextBtn').disabled = true;
+    }
+
+    function checkRappelAnswer(idx) {
+      const q = rappelQuestions[idx];
+      let isCorrect = false;
+      let answerGiven = '';
+
+      if (q.type === 'qcm') {
+        const selected = document.querySelector('input[name="rappelAns"]:checked');
+        if (!selected) return;
+        answerGiven = selected.value;
+        isCorrect = answerGiven === q.ans;
+      } else if (q.type === 'fill') {
+        answerGiven = document.getElementById('rappelFillInput').value.trim();
+        isCorrect = answerGiven === q.ans;
+      }
+
+      rappelResponses[idx] = answerGiven;
+      if (isCorrect) rappelScore++;
+
+      document.getElementById('rappelFeedbackArea').innerHTML = `
+        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+          <div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div>
+          <div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? q.ans : 'Incorrect'}</div>
+          <div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div>
+        </div>
+      `;
+      document.getElementById('rappelNextBtn').disabled = false;
+    }
+
+    function showRappelTip(idx) {
+      const q = rappelQuestions[idx];
+      document.getElementById('rappelFeedbackArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    function skipRappelQuestion() {
+      rappelResponses[currentRappelQ] = 'skipped';
+      document.getElementById('rappelFeedbackArea').innerHTML = `
+        <div class="feedback incorrect">
+          <div class="feedback-title">⊘ Passé</div>
+          <div class="feedback-text">Cette question a été passée.</div>
+        </div>
+      `;
+      document.getElementById('rappelNextBtn').disabled = false;
+    }
+
+    function nextRappelQ() {
+      if (currentRappelQ < rappelQuestions.length - 1) {
+        renderRappelQuestion(currentRappelQ + 1);
+      } else {
+        document.getElementById('rappelTestSection').classList.remove('active');
+        document.getElementById('vocabSection').classList.add('active');
+        renderVocab();
+      }
+    }
+
+    function prevRappelQ() {
+      if (currentRappelQ > 0) renderRappelQuestion(currentRappelQ - 1);
+    }
+
+    function renderVocab() {
+      const html = vocab.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="def">${v.def}</div>
+        </div>
+      `).join('');
+      document.getElementById('vocabGrid').innerHTML = html;
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `
+          <div class="option">
+            <input type="radio" name="ans" value="${o}" id="opt${i}" onchange="checkAnswer(${idx})">
+            <label for="opt${i}">${o}</label>
+          </div>
+        `).join('');
+      } else if (q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `
+          <div class="option">
+            <input type="radio" name="ans" value="${o}" id="opt${i}" onchange="checkAnswer(${idx})">
+            <label for="opt${i}">${o}</label>
+          </div>
+        `).join('');
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += `<input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div>`;
+        content += `<div class="drop-zone" id="dropZone">Zet woorden hier</div>`;
+        content += `<div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<div class="word-item" draggable="true" id="word${i}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">${w}</div>`;
+        });
+        content += `</div>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      
+      if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        zone.ondragover = (e) => e.preventDefault();
+        zone.ondrop = (e) => dropWord(e);
+      }
+      
+      document.getElementById('nextBtn').disabled = true;
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let isCorrect = false;
+      let answerGiven = '';
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answerGiven = selected.value;
+        isCorrect = answerGiven === q.ans;
+      } else if (q.type === 'fill') {
+        answerGiven = document.getElementById('fillInput').value.trim();
+        isCorrect = answerGiven === q.ans;
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item.placed')).map(w => w.textContent).join(' ');
+        answerGiven = placed || 'aucun mot place';
+        isCorrect = answerGiven === q.correct;
+      }
+
+      responses[idx] = answerGiven;
+      if (isCorrect) score++;
+
+      document.getElementById('feedbackArea').innerHTML = `
+        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+          <div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div>
+          <div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div>
+          <div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div>
+        </div>
+      `;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    function skipQuestion() {
+      responses[currentQ] = 'skipped';
+      document.getElementById('feedbackArea').innerHTML = `
+        <div class="feedback incorrect">
+          <div class="feedback-title">⊘ Passé</div>
+        </div>
+      `;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function dragStart(e) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', e.target.innerHTML);
+      e.target.style.opacity = '0.5';
+    }
+
+    function dragEnd(e) {
+      e.target.style.opacity = '1';
+    }
+
+    function dropWord(e) {
+      e.preventDefault();
+      const word = e.dataTransfer.getData('text/html');
+      const div = document.createElement('div');
+      div.className = 'word-item placed';
+      div.innerHTML = word;
+      document.getElementById('dropZone').appendChild(div);
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Kernenergie in Belgie: een noodzakelijk kwaad of duurzame toekomst?</h3>
+        <p>De Belgische regering diende onlangs plannen in voor kleine modulaire reactoren (SMR's), waarvan de eerste in 2030 operationeel moet zijn. Dit voorstel heeft felle debatten uitgelokt. Voorstanders stellen dat nucleaire energie essentieel is voor het behalen van klimaatdoelstellingen en voor energieonafhankelijkheid. Tegenstanders waarschuwen voor veiligheidsrisicos, opslagproblemen en economische risico's.</p>
+        <p>Tegelijkertijd groeit de investering in zonnepanelen en windmotoren explosief. Hun intermittente aard vereist echter robust opslag- en gridsystemen. Experts suggereren dat een mix van energiebronnen — nucleair, hernieuwbaar, en mogelijk fusie in de toekomst — noodzakelijk is voor stabiliteit en duurzaamheid.</p>
+        <p>De centrale vraag is niet welke energiebron beter is, maar hoe we ze integreren in een flexibel netwerk dat toekomstige energiebehoefte kan dekken zonder de planeet te vernietigen.</p>
+        
+        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Wat is het voornaamste argument VAN kernenergie volgens het artikel?</strong><br>
+            <input type="radio" name="comp1"> Veiligheid<br>
+            <input type="radio" name="comp1"> Essentieel voor klimaatdoelstellingen en energieonafhankelijkheid<br>
+            <input type="radio" name="comp1"> Goedkoop
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Wat is het voornaamste nadeel van hernieuwbare energie?</strong><br>
+            <input type="radio" name="comp2"> Vervuiling<br>
+            <input type="radio" name="comp2"> Intermittente aard en behoefte aan opslag<br>
+            <input type="radio" name="comp2"> Te duur
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Wanneer moeten de eerste SMR's in Belgie operationeel zijn?</strong><br>
+            <input type="radio" name="comp3"> 2030<br>
+            <input type="radio" name="comp3"> 2035<br>
+            <input type="radio" name="comp3"> 2040
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• hernieuwbaar</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• duurzaam</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• transitie</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasHernieuwbaar = opinion.toLowerCase().includes('hernieuwbaar');
+      const hasDuurzaam = opinion.toLowerCase().includes('duurzaam');
+      const hasTransitie = opinion.toLowerCase().includes('transitie');
+      
+      if (!hasHernieuwbaar || !hasDuurzaam || !hasTransitie) {
+        alert('Let op! Je hebt niet alle drie vereiste woorden gebruikt: hernieuwbaar, duurzaam, transitie');
+        return;
+      }
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/30 (' + percent + '%)';
+      
+      let msg = '';
+      let cssClass = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 3.';
+        cssClass = 'excellent';
+      } else if (percent >= 56) {
+        msg = 'Goed! Herhaal moeilijke vragen.';
+        cssClass = 'good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        cssClass = 'weak';
+      }
+      
+      const box = document.getElementById('resultsBox');
+      box.className = 'results ' + cssClass;
+      document.getElementById('scoreMsg').textContent = msg;
+    }
+
+    function restart() {
+      currentRappelQ = 0;
+      currentQ = 0;
+      rappelResponses = {};
+      responses = {};
+      rappelScore = 0;
+      score = 0;
+      document.getElementById('resultsSection').classList.remove('active');
+      document.getElementById('rappelSection').classList.add('active');
+      renderRappelVocab();
+    }
+
+    renderRappelVocab();
+  </script>
+</body>
+</html>
