@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dag 2 - Energie Game</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); color: #1a1a1a; min-height: 100vh; padding: 1rem; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .header { text-align: center; color: white; margin-bottom: 1.5rem; }
+    .header h1 { font-size: 28px; margin-bottom: 0.5rem; font-weight: 700; }
+    .header p { font-size: 14px; opacity: 0.9; }
+    
+    .game-container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    
+    #levelMenu { padding: 2rem 1.5rem; }
+    .level-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    .level-card { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); color: white; padding: 1.5rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center; }
+    .level-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4); }
+    .level-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 0.25rem; }
+    
+    #gameScreen { display: none; }
+    
+    .level-box { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); padding: 1.5rem; text-align: center; color: white; }
+    .level-box h2 { font-size: 16px; opacity: 0.8; margin-bottom: 0.5rem; }
+    .level-name { font-size: 28px; font-weight: 700; }
+    .level-indicator { font-size: 14px; opacity: 0.9; margin-top: 0.5rem; }
+    
+    .stats-bar { display: flex; justify-content: space-around; padding: 1rem; background: #f5f5f5; border-bottom: 2px solid #ddd; }
+    .stat { text-align: center; }
+    .stat-label { font-size: 12px; color: #666; margin-bottom: 0.25rem; }
+    .stat-value { font-size: 24px; font-weight: 600; }
+    .stat-value.timer { color: #f59e0b; }
+    .stat-value.score { color: #10b981; }
+    
+    .game-area { position: relative; width: 100%; height: 450px; background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%); overflow: hidden; border: 2px dashed #f59e0b; display: flex; align-items: center; justify-content: center; }
+    
+    .raindrop { position: absolute; cursor: pointer; user-select: none; font-size: 12px; padding: 8px 12px; border-radius: 20px; background: white; border: 2px solid #f59e0b; color: #f59e0b; font-weight: 600; white-space: nowrap; }
+    .raindrop.hit { opacity: 0.3; }
+    .raindrop.correct { background: #10b981; border-color: #10b981; color: white; }
+    .raindrop.incorrect { background: #ef4444; border-color: #ef4444; color: white; }
+    
+    .emoji-feedback { position: absolute; font-size: 48px; pointer-events: none; animation: bounce 0.8s ease-out forwards; }
+    
+    @keyframes bounce { 0% { transform: scale(0); opacity: 1; } 50% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+    
+    .controls { padding: 1.5rem; text-align: center; background: white; border-top: 2px solid #ddd; }
+    .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); color: white; width: 100%; }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+    
+    .instruction { font-size: 13px; color: #666; margin-bottom: 1rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚡ Dag 2: ENERGIE</h1>
+      <p>Woordfamilies Game</p>
+    </div>
+    
+    <div class="game-container">
+      <div id="levelMenu">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <p style="color: #666; font-size: 14px;">Kies een niveau:</p>
+        </div>
+        <div class="level-grid" id="levelGrid"></div>
+      </div>
+      
+      <div id="gameScreen">
+        <div class="level-box">
+          <div>Woordfamilie:</div>
+          <div class="level-name" id="levelNameGame">HERNIEUWBAAR</div>
+          <div class="level-indicator">Niveau <span id="levelNumber">1</span>/3</div>
+        </div>
+        
+        <div class="stats-bar">
+          <div class="stat">
+            <div class="stat-label">⏱️ Tijd</div>
+            <div class="stat-value timer" id="timerDisplay">300</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">✅ Score</div>
+            <div class="stat-value score" id="scoreDisplay">0/4</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">🎯 Geklikt</div>
+            <div class="stat-value" id="hitDisplay">0</div>
+          </div>
+        </div>
+        
+        <div class="game-area" id="gameArea"></div>
+        
+        <div class="controls">
+          <div class="instruction">Klik op alle woorden van de familie.<br><small>🍓 = goed | 💩 = fout</small></div>
+          <button class="btn btn-primary" id="startBtn" onclick="startGame()">Start niveau</button>
+          <button class="btn btn-primary" onclick="backToMenu()">Terug naar menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const families = {
+      'HERNIEUWBAAR': {
+        allWords: ['hernieuwbaar', 'hernieuwbaarheid', 'vernieuwing', 'hernieuwen', 'regeneratief', 'duurzaam', 'onuitputtelijk'],
+        intrusWords: ['fossiel', 'verbruik', 'efficiëntie', 'kernenergie', 'vervuiling']
+      },
+      'INFRASTRUCTUUR': {
+        allWords: ['infrastructuur', 'onderstructuur', 'basisstructuur', 'energienetwerk', 'rasterwerk', 'grid', 'netwerk'],
+        intrusWords: ['flexibiliteit', 'opslag', 'vraag', 'aanbod', 'balans']
+      },
+      'OVERGANG': {
+        allWords: ['overgang', 'transitie', 'conversie', 'omwisseling', 'omschakeling', 'metamorfose', 'transformatie'],
+        intrusWords: ['duurzaamheid', 'acceleratie', 'vervangingen', 'adopteert', 'vermindering']
+      }
+    };
+
+    let currentFamily = null;
+    let currentLevel = 1;
+    let gameActive = false;
+    let timeLeft = 300;
+    let hit = 0;
+    let timerInterval = null;
+    let totalWords = 0;
+
+    const levelConfig = { 1: 4, 2: 6, 3: 8 };
+
+    function initMenu() {
+      const grid = document.getElementById('levelGrid');
+      grid.innerHTML = '';
+      Object.keys(families).forEach((family, idx) => {
+        const card = document.createElement('div');
+        card.className = 'level-card';
+        card.innerHTML = `<h3>Niveau ${idx + 1}</h3><p>${family}</p>`;
+        card.onclick = () => selectFamily(family);
+        grid.appendChild(card);
+      });
+    }
+
+    function selectFamily(family) {
+      currentFamily = family;
+      currentLevel = 1;
+      document.getElementById('levelNameGame').textContent = family;
+      document.getElementById('levelNumber').textContent = '1';
+      document.getElementById('levelMenu').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
+      startGame();
+    }
+
+    function startGame() {
+      gameActive = true;
+      hit = 0;
+      timeLeft = 300;
+      document.getElementById('startBtn').style.display = 'none';
+      
+      const numWords = levelConfig[currentLevel];
+      const familyData = families[currentFamily];
+      const shuffledFamily = familyData.allWords.sort(() => Math.random() - 0.5);
+      const selectedWords = shuffledFamily.slice(0, numWords);
+      
+      const numIntrus = Math.min(2, Math.floor(numWords / 3));
+      const shuffledIntrus = familyData.intrusWords.sort(() => Math.random() - 0.5);
+      const selectedIntrus = shuffledIntrus.slice(0, numIntrus);
+      
+      totalWords = selectedWords.length;
+      document.getElementById('scoreDisplay').textContent = `0/${totalWords}`;
+      document.getElementById('hitDisplay').textContent = '0';
+      
+      generateRaindrops(selectedWords, selectedIntrus);
+      startTimer();
+    }
+
+    function generateRaindrops(goodWords, intrusWords) {
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      const allWords = [...goodWords, ...intrusWords].sort(() => Math.random() - 0.5);
+      
+      allWords.forEach((word, i) => {
+        setTimeout(() => {
+          if (!gameActive) return;
+          const raindrop = document.createElement('div');
+          raindrop.className = 'raindrop';
+          raindrop.textContent = word;
+          raindrop.dataset.isFamily = goodWords.includes(word);
+          raindrop.style.left = Math.random() * (gameArea.offsetWidth - 100) + 'px';
+          raindrop.style.top = '-50px';
+          raindrop.onclick = () => selectRaindrop(raindrop, goodWords);
+          gameArea.appendChild(raindrop);
+          
+          const yStart = -50, yEnd = gameArea.offsetHeight + 20, duration = 25000;
+          const startTime = Date.now();
+          
+          function fall() {
+            if (!gameActive) return;
+            const progress = Math.min((Date.now() - startTime) / duration, 1);
+            raindrop.style.top = (yStart + (yEnd - yStart) * progress) + 'px';
+            if (progress < 1) requestAnimationFrame(fall);
+            else raindrop.remove();
+          }
+          fall();
+        }, i * 2000);
+      });
+    }
+
+    function selectRaindrop(raindrop, goodWords) {
+      if (raindrop.classList.contains('hit')) return;
+      raindrop.classList.add('hit');
+      
+      const isCorrect = raindrop.dataset.isFamily === 'true';
+      const gameArea = document.getElementById('gameArea');
+      const emoji = document.createElement('div');
+      emoji.className = 'emoji-feedback';
+      emoji.textContent = isCorrect ? '🍓' : '💩';
+      emoji.style.left = raindrop.offsetLeft + 'px';
+      emoji.style.top = raindrop.offsetTop + 'px';
+      gameArea.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 800);
+      
+      if (isCorrect) {
+        raindrop.classList.add('correct');
+        hit++;
+        document.getElementById('scoreDisplay').textContent = `${hit}/${totalWords}`;
+        document.getElementById('hitDisplay').textContent = hit;
+        
+        if (hit === totalWords) {
+          endLevel();
+        }
+      } else {
+        raindrop.classList.add('incorrect');
+      }
+    }
+
+    function endLevel() {
+      gameActive = false;
+      clearInterval(timerInterval);
+      
+      const percentage = Math.round((hit / totalWords) * 100);
+      let emoji = percentage >= 85 ? '🍓' : (percentage <= 20 ? '💩' : '🍓💩');
+      
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      const bigEmoji = document.createElement('div');
+      bigEmoji.style.fontSize = '150px';
+      bigEmoji.style.animation = 'bounce 0.8s ease-out';
+      bigEmoji.textContent = emoji;
+      gameArea.appendChild(bigEmoji);
+      
+      setTimeout(() => {
+        if (currentLevel < 3) {
+          currentLevel++;
+          document.getElementById('levelNumber').textContent = currentLevel;
+          document.getElementById('startBtn').style.display = 'block';
+          startGame();
+        } else {
+          backToMenu();
+        }
+      }, 2000);
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timerDisplay').textContent = timeLeft;
+        if (timeLeft <= 0) timerOver();
+      }, 1000);
+    }
+
+    function timerOver() {
+      gameActive = false;
+      clearInterval(timerInterval);
+      
+      const percentage = Math.round((hit / totalWords) * 100);
+      let emoji = percentage >= 85 ? '🍓' : (percentage <= 20 ? '💩' : '🍓💩');
+      
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      const bigEmoji = document.createElement('div');
+      bigEmoji.style.fontSize = '150px';
+      bigEmoji.style.animation = 'bounce 0.8s ease-out';
+      bigEmoji.textContent = emoji;
+      gameArea.appendChild(bigEmoji);
+      
+      setTimeout(() => {
+        if (currentLevel < 3) {
+          currentLevel++;
+          document.getElementById('levelNumber').textContent = currentLevel;
+          document.getElementById('startBtn').style.display = 'block';
+          startGame();
+        } else {
+          backToMenu();
+        }
+      }, 2000);
+    }
+
+    function backToMenu() {
+      gameActive = false;
+      clearInterval(timerInterval);
+      document.getElementById('levelMenu').style.display = 'block';
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('startBtn').style.display = 'block';
+      currentLevel = 1;
+      initMenu();
+    }
+
+    initMenu();
+  </script>
+</body>
+</html>
