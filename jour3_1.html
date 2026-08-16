@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 3: GEZONDHEID</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .secret-phrase { font-style: italic; text-align: center; padding: 1rem; margin: 1rem 0; background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); border-radius: 8px; color: #d63031; font-weight: 500; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .container { max-width: 750px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .reminder-box { background: #fef3c7; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #f59e0b; }
+    .reminder-box h3 { margin-bottom: 1rem; color: #f59e0b; font-size: 16px; }
+    .reminder-box p { font-size: 13px; line-height: 1.8; margin-bottom: 0.75rem; }
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; }
+    .option label { cursor: pointer; }
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 1rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; opacity: 0.6; }
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .intro-box { background: #f0f7ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #1976d2; }
+    .intro-box h3 { margin-bottom: 1rem; color: #1976d2; font-size: 16px; }
+    .intro-box p { font-size: 13px; line-height: 1.8; margin-bottom: 1rem; text-align: justify; }
+    .news-box { background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #10b981; }
+    .news-box h3 { font-size: 16px; color: #10b981; margin-bottom: 1rem; }
+    .news-item { margin: 0.75rem 0; padding: 0.75rem; background: #f9f9f9; border-radius: 6px; }
+    .news-source { font-size: 11px; color: #f59e0b; font-weight: 600; }
+    .news-title { font-size: 13px; color: #1a1a1a; margin-top: 0.25rem; }
+    .vocab-section { margin-bottom: 2rem; }
+    .vocab-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 4px; }
+    .vocab-section.must h4 { background: #ffebee; color: #c62828; }
+    .vocab-section.action h4 { background: #fff3e0; color: #f57f17; }
+    .vocab-section.expr h4 { background: #e8f5e9; color: #2e7d32; }
+    .vocab-section.nice h4 { background: #e3f2fd; color: #1976d2; }
+    .vocab-section.autres h4 { background: #f3e5f5; color: #6a1b9a; }
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 6px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .def { font-size: 11px; color: #666; margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="secretPhraseContainer"></div>
+    
+    <!-- RAPPEL -->
+    <div id="reminderSection" class="section active">
+      <div class="header">
+        <h1>Dag 3: GEZONDHEID</h1>
+        <p>19 augustus — Rappel Dag 1-2 + 20 woorden + 30 vragen</p>
+      </div>
+      <div class="reminder-box">
+        <h3>🔄 Herhaling Dag 1-2 (10 QCM)</h3>
+        <p><strong>Dag 1 (Klimaat):</strong> Broeikasgasemissies, fragmentarisch beleid, asymmetrische capaciteiten.<br><strong>Dag 2 (Energie):</strong> Energietransitie, bifurcatie economisch-politiek, werkgelegenheid.</p>
+        <div id="reminderContent" style="margin-top: 1.5rem;"></div>
+      </div>
+    </div>
+
+    <!-- PRESENTATIE -->
+    <div id="presentationSection" class="section">
+      <div class="intro-box">
+        <h3>Gezondheidsbeleid in multilateraal spanningsveld: pandemieën, soevereiniteit en preventie</h3>
+        <p>COVID-19 heeft onthuld hoe pandemieën de fictie van medische autonomie ondergraven en staten voor epistemische crises plaatsen waarin wetenschappelijke onzekerheid botst tegen politieke opportunisme. De asymmetrische verspreiding van vectorgedragen ziekten (dengue, malaria) volgt bestaande ongelijkheden: landen met zwakke gezondheidssystemen en beperkte onderzoekscapaciteit worden disproportioneel getroffen, hetgeen zorgsystemen destabiliseert en voedselzekerheid aantast. Multilateralisme—cruciale coördinatiemechanisme door WHO en regionale organisaties—wordt echter ondergraven door soevereiniteitsclaims en weigeringen tot surveillance-sharing, waardoor epidemiologische monitoring fragmentarisch blijft. Onderzoeksinstituties (Sciensano, KULeuven medische wetenschappen) stellen dat zonder herstructurering van mondiale gezondheidsgovernance en investeringen in lokale laboratoriumcapaciteit, toekomstige pandemieën onbeheersbaar zullen escaleren.</p>
+      </div>
+      <button class="btn btn-primary" onclick="gotoNews()">Bekijk actualiteiten</button>
+    </div>
+
+    <!-- ACTUALITEITEN -->
+    <div id="newsSection" class="section">
+      <div class="news-box">
+        <h3>📰 Actuele artikelen</h3>
+        <div class="news-item">
+          <div class="news-source">VRT</div>
+          <div class="news-title">COVID-19 nalatenschap: waarom Belgische gezondheidssysteem kwetsbaar blijft voor toekomstige pandemieën</div>
+        </div>
+        <div class="news-item">
+          <div class="news-source">RTBF</div>
+          <div class="news-title">Dengue-epidemie bedreigt Afrika: onderfinanciering van onderzoek vertraagt vacconontwikkeling</div>
+        </div>
+        <div class="news-item">
+          <div class="news-source">De Standaard</div>
+          <div class="news-title">WHO waarschuwt: fragmentarische surveillance leidt tot vertraagde detectie van nieuwe varianten</div>
+        </div>
+        <div class="news-item">
+          <div class="news-source">Sciensano (Belgisch Instituut voor Volksgezondheid)</div>
+          <div class="news-title">Epidemiologische monitoring in Europa: gaps in databronnen en internationale coördinatie</div>
+        </div>
+        <div class="news-item">
+          <div class="news-source">KULeuven — Faculteit Geneeskunde & Biomedische Wetenschappen</div>
+          <div class="news-title">Mondiale gezondheidsgovernance na COVID: multilateralisme versus nationale defensie</div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="gotoVocab()">Start met vocabulaire</button>
+    </div>
+
+    <!-- VOCAB -->
+    <div id="vocabSection" class="section">
+      <h2 style="margin-bottom: 1.5rem;">📚 Vocabulaire Dag 3</h2>
+      
+      <div class="vocab-section must">
+        <h4>🔴 MUST HAVE (7)</h4>
+        <div class="vocab-grid" id="vocabMust"></div>
+      </div>
+
+      <div class="vocab-section action">
+        <h4>🟡 WERKWOORDEN (5)</h4>
+        <div class="vocab-grid" id="vocabAction"></div>
+      </div>
+
+      <div class="vocab-section expr">
+        <h4>🟢 UITDRUKKINGEN (3)</h4>
+        <div class="vocab-grid" id="vocabExpr"></div>
+      </div>
+
+      <div class="vocab-section nice">
+        <h4>🔵 NICE TO HAVE (5)</h4>
+        <div class="vocab-grid" id="vocabNice"></div>
+      </div>
+
+      <div class="vocab-section autres">
+        <h4>⚪ ANDERE WOORDEN (10)</h4>
+        <div class="vocab-grid" id="vocabAutres"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (30 vragen)</button>
+    </div>
+
+    <!-- TEST PLACEHOLDER -->
+    <div id="testSection" class="section">
+      <div style="text-align: center; padding: 2rem; background: white; border-radius: 8px;">
+        <h2 style="margin-bottom: 1rem;">30 vragen test</h2>
+        <p style="margin-bottom: 1rem; color: #666;">Volledige test-versie op GitHub Pages</p>
+        <button class="btn btn-primary" onclick="backToVocab()">Terug naar vocabulaire</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const secretPhrases = [
+      "Tu es forte, Nuria. 💪",
+      "Tu es déterminée. C'est impressionnant! ✨",
+      "On est fier de toi. 💙",
+      "On t'aime, Nuria. 💛",
+      "Tu fais tout pour y arriver. Bravo! 🌟",
+      "On est super impressionné par tout ce que tu fais. 🎯",
+      "Prends soin de toi, Nuria. 🌸",
+      "Repose-toi quand tu en as besoin. 💤",
+      "Tu es capable de tout! 🚀",
+      "Continue comme ça! Tu y es presque! 🎉",
+      "Chaque jour tu deviens plus forte. 💪",
+      "On croit en toi, Nuria. 🌈"
+    ];
+
+    function placerPhrasSecrète() {
+      const phrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+      const container = document.getElementById('secretPhraseContainer');
+      container.innerHTML = `<div class="secret-phrase">${phrase}</div>`;
+      container.style.display = 'block';
+    }
+
+    const reminderQuestions = [
+      // Dag 1
+      { text: 'Waarom is klimaatverandering een politieke kwestie?', opts: ['Alleen fysische effecten', 'Omdat niets kan veranderen', 'Conflicten over verdeling van lasten'], ans: 'Conflicten over verdeling van lasten' },
+      { text: 'Wat betekent mitigatie?', opts: ['Negeren van het probleem', 'Het verminderen van klimaatverandering door emissies te beperken', 'Zich aanpassen'], ans: 'Het verminderen van klimaatverandering door emissies te beperken' },
+      { text: 'Wat is weerbaarheid in klimaatcontext?', opts: ['Het vermogen van systemen om tegen verandering bestand te zijn', 'Sterkte van industrieën', 'Snelheid van innovatie'], ans: 'Het vermogen van systemen om tegen verandering bestand te zijn' },
+      { text: 'Waarom is fragmentarisch beleid problematisch?', opts: ['Omdat versnipperd beleid geen adequate respons vormt', 'Omdat het snel is', 'Omdat het goedkoop is'], ans: 'Omdat versnipperd beleid geen adequate respons vormt' },
+      { text: 'Wat is asymmetrische verdeling?', opts: ['Bepaalde groepen zwaarder getroffen dan anderen', 'Geen verdeling', 'Gelijke verdeling'], ans: 'Bepaalde groepen zwaarder getroffen dan anderen' },
+      // Dag 2
+      { text: 'Wat is bifurcatie in energiecontext?', opts: ['Fusie van landen', 'Splitsing tussen decarbonisatie en werkgelegenheid', 'Versnelling'], ans: 'Splitsing tussen decarbonisatie en werkgelegenheid' },
+      { text: 'Welke sector verliest meest werkgelegenheid door transitie?', opts: ['Diensten', 'Fossiele brandstoffen', 'IT'], ans: 'Fossiele brandstoffen' },
+      { text: 'Wat is interfederaal beleid?', opts: ['Tussen federale regio\'s', 'Privé', 'Mondiaal'], ans: 'Tussen federale regio\'s' },
+      { text: 'Hoe noem je hernieuwbare energiebron?', opts: ['Steenkool', 'Zon en wind', 'Fossielbrandstof'], ans: 'Zon en wind' },
+      { text: 'Wat is spanningsveld?', opts: ['Leeg veld', 'Situatie vol van tegenstrijdige belangen', 'Veld met energie'], ans: 'Situatie vol van tegenstrijdige belangen' }
+    ];
+
+    let reminderIdx = 0;
+    let reminderScore = 0;
+
+    function renderReminder() {
+      if (reminderIdx >= reminderQuestions.length) {
+        document.getElementById('reminderContent').innerHTML = `
+          <div style="text-align: center; padding: 1.5rem; background: #e8f5e9; border-radius: 6px; color: #2e7d32;">
+            <div style="font-size: 24px; font-weight: 500; margin-bottom: 1rem;">${reminderScore}/10 correct</div>
+            <button class="btn btn-primary" onclick="document.getElementById('reminderSection').classList.remove('active'); document.getElementById('presentationSection').classList.add('active');">Start Dag 3</button>
+          </div>
+        `;
+        return;
+      }
+
+      const q = reminderQuestions[reminderIdx];
+      const html = `
+        <div class="question-card">
+          <div style="font-size: 12px; color: #666; margin-bottom: 1rem;">Vraag ${reminderIdx + 1}/10</div>
+          <div class="question-text">${q.text}</div>
+          ${q.opts.map((o, i) => `
+            <div class="option">
+              <input type="radio" name="reminder" value="${o}" id="rem${i}">
+              <label for="rem${i}">${o}</label>
+            </div>
+          `).join('')}
+          <button class="btn btn-primary" onclick="checkReminder()">Controleer</button>
+          <div id="reminderFeedback"></div>
+        </div>
+      `;
+      document.getElementById('reminderContent').innerHTML = html;
+    }
+
+    function checkReminder() {
+      const q = reminderQuestions[reminderIdx];
+      const selected = document.querySelector('input[name="reminder"]:checked');
+      if (!selected) {
+        alert('Selecteer alstublieft een antwoord');
+        return;
+      }
+      
+      const isCorrect = selected.value === q.ans;
+      if (isCorrect) reminderScore++;
+      
+      const fb = document.getElementById('reminderFeedback');
+      const btnCheck = document.querySelector('button[onclick="checkReminder()"]');
+      btnCheck.disabled = true;
+      
+      fb.innerHTML = `
+        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}" style="margin-top: 1rem;">
+          <div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div>
+          <div class="feedback-text"><strong>Antwoord:</strong> ${q.ans}</div>
+        </div>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextReminder()" style="margin-top: 1rem; opacity: 0.5;" disabled>Volgende...</button>
+      `;
+      
+      setTimeout(() => {
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.style.opacity = '1';
+          nextBtn.textContent = 'Volgende →';
+        }
+      }, 800);
+    }
+
+    function nextReminder() {
+      reminderIdx++;
+      renderReminder();
+    }
+
+    renderReminder();
+
+    const vocabMust = [
+      { nl: 'pandemie', def: 'Wereldwijde verspreiding van besmettelijke ziekte.' },
+      { nl: 'gezondheidsbeleid', def: 'Regelgeving voor volksgezondheid en preventie.' },
+      { nl: 'multilateralisme', def: 'Samenwerking tussen meerdere landen.' },
+      { nl: 'vectorgedragen ziekten', def: 'Door insecten verspreide ziekten (dengue, malaria).' },
+      { nl: 'epidemiologie', def: 'Studie van verspreiding en preventie van ziekten.' },
+      { nl: 'mortaliteit', def: 'Aantal doden in populatie.' },
+      { nl: 'soevereiniteit', def: 'Onafhankelijkheid en zelfbeschikking van staat.' }
+    ];
+
+    const vocabAction = [
+      { nl: 'ondergraven', def: 'Zwakken; minder sterk maken.' },
+      { nl: 'destabiliseren', def: 'Onstabiel maken; ondergraven.' },
+      { nl: 'aantasten', def: 'Beschadigen; aanvallen.' },
+      { nl: 'coördineren', def: 'Samenwerken; ordenen.' },
+      { nl: 'escaleren', def: 'Toenemen; verergeren.' }
+    ];
+
+    const vocabExpr = [
+      { nl: 'epistemische crisis', def: 'Crisis van kennis; onzekerheid over waarheid.' },
+      { nl: 'surveillance-sharing', def: 'Delen van gezondheidsgegevens.' },
+      { nl: 'fragmentarische monitoring', def: 'Onvolledig toezicht verspreid over meerdere actoren.' }
+    ];
+
+    const vocabNice = [
+      { nl: 'asymmetrisch', def: 'Ongelijk verdeeld; niet in balans.' },
+      { nl: 'beperking', def: 'Grens; het niet kunnen iets doen.' },
+      { nl: 'laboratoriumcapaciteit', def: 'Vermogen om testen/onderzoek uit te voeren.' },
+      { nl: 'governance', def: 'Bestuuring; beheer.' },
+      { nl: 'surveillance', def: 'Toezicht; monitoring.' }
+    ];
+
+    const vocabAutres = [
+      { nl: 'fictie', def: 'Verzinsel; niet-waarheid.' },
+      { nl: 'opportunisme', def: 'Zelfzuchtig gebruik van kans.' },
+      { nl: 'zwak', def: 'Niet sterk; vulnerabel.' },
+      { nl: 'weigering', def: 'Niet willen; afkeuring.' },
+      { nl: 'WHO', def: 'World Health Organization.' },
+      { nl: 'variant', def: 'Vorm; variant van ziekte.' },
+      { nl: 'onbeheersbaar', def: 'Niet onder controle.' },
+      { nl: 'voedselzekerheid', def: 'Beschikbaarheid van voedsel.' },
+      { nl: 'herstructurering', def: 'Reorganisatie; opnieuw inrichten.' },
+      { nl: 'zorgsysteem', def: 'Systeem van medische zorg.' }
+    ];
+
+    function renderVocab(vocabArray, elemId) {
+      const html = vocabArray.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="def">${v.def}</div>
+        </div>
+      `).join('');
+      document.getElementById(elemId).innerHTML = html;
+    }
+
+    function gotoNews() {
+      document.getElementById('presentationSection').classList.remove('active');
+      document.getElementById('newsSection').classList.add('active');
+    }
+
+    function gotoVocab() {
+      document.getElementById('newsSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderVocab(vocabMust, 'vocabMust');
+      renderVocab(vocabAction, 'vocabAction');
+      renderVocab(vocabExpr, 'vocabExpr');
+      renderVocab(vocabNice, 'vocabNice');
+      renderVocab(vocabAutres, 'vocabAutres');
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      console.log('✅ Test section activated - button START DE TEST (30 VRAGEN) clicked');
+    }
+
+    function backToVocab() {
+      document.getElementById('testSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+    }
+
+    window.addEventListener('load', placerPhrasSecrète);
+  </script>
+</body>
+</html>
