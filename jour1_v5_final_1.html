@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 1: KLIMAAT</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .def { font-size: 11px; color: #666; margin-top: 0.25rem; }
+    
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    .blank { background: #fff3cd; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+    
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; }
+    .option label { cursor: pointer; }
+    
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; font-family: inherit; min-height: 80px; }
+    
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin: 0.25rem 0; }
+    .traduction { font-style: italic; color: #666; margin-top: 0.5rem; }
+    
+    .tip-box { background: #fff3cd; padding: 0.75rem; border-radius: 6px; margin: 0.5rem 0; border-left: 3px solid #ffc107; font-size: 13px; }
+    
+    .drop-zone { background: #f0f0f0; border: 2px dashed #1976d2; border-radius: 6px; padding: 1rem; min-height: 50px; margin: 1rem 0; }
+    .word-item { background: white; padding: 8px 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 4px; cursor: move; display: inline-block; user-select: none; }
+    .word-item.placed { background: #bbdefb; border-color: #1976d2; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; }
+    .reading p { margin-bottom: 1rem; text-align: justify; }
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .required-words { background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+    .required-words strong { color: #1976d2; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- VOCABULAIRE -->
+    <div id="vocabSection" class="section active">
+      <div class="header">
+        <h1>Dag 1: KLIMAAT</h1>
+        <p>17 augustus — 20 woorden + 30 vragen</p>
+      </div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (30 vragen)</button>
+    </div>
+
+    <!-- TEST -->
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/30</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="tipArea"></div>
+        <div id="feedbackArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEZING -->
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <!-- RESULTATEN -->
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 1</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/30</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+    </div>
+  </div>
+
+  <script>
+    const vocab = [
+      { nl: 'hittegolf', def: 'Een periode van extreem hete temperaturen.' },
+      { nl: 'transitie', def: 'Het overgaan van één situatie naar een ander.' },
+      { nl: 'fossiele brandstof', def: 'Energiebron die vervuiling veroorzaakt.' },
+      { nl: 'uitstoot', def: 'Gassen of vervuiling in de atmosfeer.' },
+      { nl: 'weerbaarheid', def: 'Vermogen om tegen klimaatverandering bestand te zijn.' },
+      { nl: 'droogte', def: 'Langdurige periode zonder regen.' },
+      { nl: 'opwarming', def: 'Stijging van de gemiddelde wereldtemperatuur.' },
+      { nl: 'verschuiving', def: 'Het verplaatsen van iets van de ene plaats naar ander.' },
+      { nl: 'opwarmen', def: 'Hoger worden in temperatuur.' },
+      { nl: 'overtreffen', def: 'Hoger gaan dan een bepaald niveau.' },
+      { nl: 'aanpassen', def: 'Veranderingen aanbrengen voor nieuwe omstandigheden.' },
+      { nl: 'verminderen', def: 'Omlaag brengen; minder maken.' },
+      { nl: 'versnellen', def: 'Sneller gaan; tempo verhogen.' },
+      { nl: 'verergeren', def: 'Erger maken; slechter maken.' },
+      { nl: 'heftig', def: 'Zeer sterk; hevig.' },
+      { nl: 'extreem', def: 'Zeer uitermate; het uiterste.' },
+      { nl: 'geleidelijk', def: 'Stap voor stap; niet plotseling.' },
+      { nl: 'dringend', def: 'Vereist onmiddellijke aandacht.' },
+      { nl: 'op korte termijn', def: 'In de nabije toekomst.' },
+      { nl: 'op lange termijn', def: 'In een verre toekomst.' }
+    ];
+
+    const questions = [
+      { type: 'qcm', text: 'De <span class="blank">hittegolf</span> zorgde voor veel gezondheidsrisicos.', opts: ['hittegolf', 'droogte', 'transitie', 'opwarming'], ans: 'hittegolf', fr: 'vague de chaleur' },
+      { type: 'fill', text: 'De energie__________ is dringend nodig.', ans: 'transitie', tip: 'Famille: transit, transitie, transformatie', fr: 'transition' },
+      { type: 'intrus', text: 'Welk woord hoort NIET? hittegolf — droogte — opwarming — aanpassen', opts: ['hittegolf', 'droogte', 'opwarming', 'aanpassen'], ans: 'aanpassen', fr: 'aanpassen est une action' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['Het', 'klimaat', 'warmt', 'op', 'door', 'broeikasgassen'], correct: 'Het klimaat warmt op door broeikasgassen', fr: 'Le climat se rechauffe' },
+      { type: 'qcm', text: 'We moeten de CO2-uitstoot verminderen op lange termijn.', opts: ['vermindering', 'uitstoot', 'opwarming', 'droogte'], ans: 'uitstoot', fr: 'emission' },
+      
+      { type: 'fill', text: 'De temperaturen zijn __________ door mondiale opwarming.', ans: 'gestegen', tip: 'Vervoegingen: stijgen, gestegen, stijgt, stijging', fr: 'montees' },
+      { type: 'intrus', text: 'Welk werkwoord past NIET? verminderen — versnellen — verergeren — heftig', opts: ['verminderen', 'versnellen', 'verergeren', 'heftig'], ans: 'heftig', fr: 'heftig est un adjectif' },
+      { type: 'qcm', text: 'De weerbaarheid van landen moet worden verhoogd.', opts: ['droogte', 'weerbaarheid', 'transitie', 'opwarming'], ans: 'weerbaarheid', fr: 'resilience' },
+      { type: 'fill', text: 'We moeten emissies __________ om het klimaat te redden.', ans: 'verminderen', tip: 'Familie: minderen, minder, verminderd, vermindering', fr: 'reduire' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['We', 'moeten', 'de', 'CO2-uitstoot', 'verminderen'], correct: 'We moeten de CO2-uitstoot verminderen', fr: 'Nous devons reduire les emissions' },
+      
+      { type: 'intrus', text: 'Welk woord is GEEN klimaatprobleem? uitstoot — droogte — fossiele brandstof — transitie', opts: ['uitstoot', 'droogte', 'fossiele brandstof', 'transitie'], ans: 'transitie', fr: 'transitie est une solution' },
+      { type: 'qcm', text: 'Op lange termijn kan de aarde onleefbaar worden.', opts: ['korte termijn', 'lange termijn', 'termijn', 'toekomst'], ans: 'lange termijn', fr: 'long terme' },
+      { type: 'fill', text: 'Het klimaat warmt geleidelijk __________. ', ans: 'op', tip: 'Vervoegingen: warmen, opwarmen, warmt op, opgewarmd', fr: 'se rechauffe' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['Dringende', 'maatregelen', 'worden', 'genomen', 'door', 'de', 'regering'], correct: 'Dringende maatregelen worden genomen door de regering', fr: 'Des mesures urgentes sont prises' },
+      { type: 'qcm', text: 'Wetenschappers waarschuwen dat extreme temperaturen zullen toenemen.', opts: ['afnemen', 'toenemen', 'gelijk blijven', 'verdwijnen'], ans: 'toenemen', fr: 'augmenter' },
+      
+      { type: 'fill', text: 'De weerbaarheid moet worden __________ tegen extreem weer.', ans: 'versterkt', tip: 'Familie: sterken, sterk, versterking, versterkingen', fr: 'renforcee' },
+      { type: 'intrus', text: 'Welke vorm klopt NIET? opwarmde — opgewarmd — is opgewarmd — warmt op', opts: ['opwarmde', 'opgewarmd', 'is opgewarmd', 'warmt op'], ans: 'opwarmde', fr: 'opwarmde n existe pas' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['De', 'fossiele', 'brandstoffen', 'moeten', 'worden', 'vervangen'], correct: 'De fossiele brandstoffen moeten worden vervangen', fr: 'Les carburants fossiles doivent etre remplaces' },
+      { type: 'qcm', text: 'De afgelopen zomer was heftig warm in Belgie.', opts: ['zacht', 'matig', 'heftig', 'mild'], ans: 'heftig', fr: 'intense' },
+      { type: 'fill', text: 'Op korte termijn moeten __________ worden ingesteld.', ans: 'koelcentra', tip: 'Samenstelling: koel (froid) + centra (centres)', fr: 'centres de refroidissement' },
+      
+      { type: 'intrus', text: 'Welk woord hoort NIET? overtreffen — surpasser — depasser — torenhoog', opts: ['overtreffen', 'surpasser', 'depasser', 'torenhoog'], ans: 'torenhoog', fr: 'torenhoog est un adjectif' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['Als', 'we', 'de', 'transitie', 'niet', 'versnellen', 'zal', 'het', 'te', 'laat', 'zijn'], correct: 'Als we de transitie niet versnellen zal het te laat zijn', fr: 'Si nous n accelerons pas la transition il sera trop tard' },
+      { type: 'qcm', text: 'Dringende maatregelen worden genomen door de regering.', opts: ['zullen genomen', 'worden genomen', 'zijn genomen', 'nemen'], ans: 'worden genomen', fr: 'sont prises passif' },
+      { type: 'fill', text: 'De verschuiving naar groene energie is __________. ', ans: 'onvermijdelijk', tip: 'Familie: vermijden, vermijdelijk, onvermijdelijk', fr: 'inevitable' },
+      { type: 'intrus', text: 'Welke zin is INCORRECT? De droogte wordt erger. — De droogte verergert. — Wordt droogte erger? — De droogte verergeren.', opts: ['De droogte wordt erger', 'De droogte verergert', 'Wordt droogte erger?', 'De droogte verergeren'], ans: 'De droogte verergeren', fr: 'manque le verbe' },
+      
+      { type: 'fill', text: 'De weerbaarheid van landen is __________. ', ans: 'essentieel', tip: 'Familie: essentie, wezenlijk, onmisbaar, kritiek', fr: 'essentielle' },
+      { type: 'qcm', text: 'De globale opwarming versnelt exponentieel.', opts: ['vertraagt', 'versnelt', 'stopt', 'normaliseert'], ans: 'versnelt', fr: 'accelere' },
+      { type: 'order', text: 'Zet in juiste volgorde:', words: ['De', 'politieke', 'spanningen', 'vertragen', 'de', 'transitie'], correct: 'De politieke spanningen vertragen de transitie', fr: 'Les tensions politiques ralentissent la transition' },
+      { type: 'fill', text: 'De transitie is economisch __________ en politiek complex.', ans: 'noodzakelijk', tip: 'Familie: nood, nodig, noodzaak, noodzakelijk', fr: 'necessaire' }
+    ];
+
+    let currentQ = 0;
+    let responses = {};
+    let score = 0;
+
+    function renderVocab() {
+      const html = vocab.map(v => `
+        <div class="vocab-item">
+          <div class="nl">${v.nl}</div>
+          <div class="def">${v.def}</div>
+        </div>
+      `).join('');
+      document.getElementById('vocabGrid').innerHTML = html;
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      
+      if (q.type === 'qcm') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `
+          <div class="option">
+            <input type="radio" name="ans" value="${o}" id="opt${i}" onchange="checkAnswer(${idx})">
+            <label for="opt${i}">${o}</label>
+          </div>
+        `).join('');
+      } else if (q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `
+          <div class="option">
+            <input type="radio" name="ans" value="${o}" id="opt${i}" onchange="checkAnswer(${idx})">
+            <label for="opt${i}">${o}</label>
+          </div>
+        `).join('');
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += `<input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) {
+          document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip: kijk familiewoorden</button>`;
+        }
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div>`;
+        content += `<div class="drop-zone" id="dropZone">Zet woorden hier</div>`;
+        content += `<div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<div class="word-item" draggable="true" id="word${i}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">${w}</div>`;
+        });
+        content += `</div>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      
+      if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        zone.ondragover = (e) => e.preventDefault();
+        zone.ondrop = (e) => dropWord(e);
+      }
+      
+      document.getElementById('nextBtn').disabled = true;
+      document.getElementById('prevBtn').disabled = idx === 0;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    function dragStart(e) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', e.target.innerHTML);
+      e.target.style.opacity = '0.5';
+    }
+
+    function dragEnd(e) {
+      e.target.style.opacity = '1';
+    }
+
+    function dropWord(e) {
+      e.preventDefault();
+      const word = e.dataTransfer.getData('text/html');
+      const div = document.createElement('div');
+      div.className = 'word-item placed';
+      div.innerHTML = word;
+      document.getElementById('dropZone').appendChild(div);
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let isCorrect = false;
+      let answerGiven = '';
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answerGiven = selected.value;
+        isCorrect = answerGiven === q.ans;
+      } else if (q.type === 'fill') {
+        answerGiven = document.getElementById('fillInput').value.trim();
+        isCorrect = answerGiven === q.ans;
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item.placed')).map(w => w.textContent).join(' ');
+        answerGiven = placed || 'aucun mot place';
+        isCorrect = answerGiven === q.correct;
+      }
+
+      responses[idx] = answerGiven;
+      if (isCorrect) score++;
+
+      document.getElementById('feedbackArea').innerHTML = `
+        <div class="feedback ${isCorrect ? 'correct' : 'incorrect'}">
+          <div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div>
+          <div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div>
+          <div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div>
+        </div>
+      `;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function skipQuestion() {
+      responses[currentQ] = 'skipped';
+      document.getElementById('feedbackArea').innerHTML = `
+        <div class="feedback incorrect">
+          <div class="feedback-title">⊘ Passé</div>
+          <div class="feedback-text">Cette question a été passée (0 point).</div>
+        </div>
+      `;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Klimaatverandering, politieke spanningen en economische dilemmas in België</h3>
+        <p>De hittegolf van augustus 2026 heeft niet alleen miljoen gezinnen getroffen, maar ook een dieper probleem blootgelegd: de kloof tussen wetenschappelijke urgentie en politieke realiteit. Terwijl klimaatmodellen een onvermijdelijke verschuiving voorspellen naar duurzame energie, worstelt België met een complex web van regionale belangen, economische angsten en ideologische standpunten die de transitie vertragen.</p>
+        <p>Aan de ene kant eisen wetenschappers onmiddellijke actie om de tipping point tegen te gaan — een hypothetische threshold waarover de klimaatverandering irreversibel wordt. Aan de andere kant waarschuwen werkgeversorganisaties dat een te snelle afbouw van fossiele brandstoffen massale werkloosheid zal veroorzaken, vooral in traditionele industrieen. Dit dilemma wordt versterkt door federale structuren: Vlaanderen verzet zich tegen bepaalde regelgeving die het economische model bedreigt, terwijl Wallonie zich kan veroorloven meer milieu-vriendelijk te zijn dankzij zijn diversere industrieen.</p>
+        <p>Een subtielere dimensie betreft de onrechtvaardigheid van de transitie. Wie draagt de lasten? Arbeiders in steenkoolmijnen? Huishoudens die niet kunnen betalen voor zonnepanelen? Of multinationals die hun uitstoot simpelweg verplaatsen naar landen met zwakkere regelgeving? Experts suggereren dat de weerbaarheid van een samenleving niet alleen afhangt van technologische innovatie, maar van een eerlijk verdeling van de lasten en baten van de transitie.</p>
+        
+        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Wat is het kernprobleem dat de hittegolf van augustus blootlegde?</strong><br>
+            <input type="radio" name="comp1"> Klimaatmodellen zijn onnauwkeurig<br>
+            <input type="radio" name="comp1"> De kloof tussen urgentie van wetenschap en politieke realiteit<br>
+            <input type="radio" name="comp1"> Te veel werkloosheid in groene sectoren
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Wat is een tipping point volgens het artikel?</strong><br>
+            <input type="radio" name="comp2"> Een economisch probleem<br>
+            <input type="radio" name="comp2"> Een politieke beslissing<br>
+            <input type="radio" name="comp2"> Een threshold waar klimaatverandering irreversibel wordt
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Waarom kan Wallonie zich meer milieuvriendelijk gedragen dan Vlaanderen?</strong><br>
+            <input type="radio" name="comp3"> Het ligt verder van broeikasgasbronnen<br>
+            <input type="radio" name="comp3"> Omdat het een diversere economie heeft<br>
+            <input type="radio" name="comp3"> Omdat het meer geld van de EU krijgt
+          </div>
+          <div class="comprehension-q">
+            <strong>4. Wat betekent 'eerlijke verdeling van lasten' in deze context?</strong><br>
+            <input type="radio" name="comp4"> Iedereen betaalt gelijk veel voor energie<br>
+            <input type="radio" name="comp4"> De kosten en voordelen van transitie worden rechtvaardig verdeeld<br>
+            <input type="radio" name="comp4"> Multinationals krijgen subsidies
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• transitie</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• dringend</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• weerbaarheid</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasTransitie = opinion.toLowerCase().includes('transitie');
+      const hasDringend = opinion.toLowerCase().includes('dringend');
+      const hasWeerbaarheid = opinion.toLowerCase().includes('weerbaarheid');
+      
+      if (!hasTransitie || !hasDringend || !hasWeerbaarheid) {
+        alert('Let op! Je hebt niet alle drie vereiste woorden gebruikt: transitie, dringend, weerbaarheid');
+        return;
+      }
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/30 (' + percent + '%)';
+      
+      let msg = '';
+      let cssClass = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 2.';
+        cssClass = 'excellent';
+      } else if (percent >= 56) {
+        msg = 'Goed! Herhaal moeilijke vragen.';
+        cssClass = 'good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        cssClass = 'weak';
+      }
+      
+      const box = document.getElementById('resultsBox');
+      box.className = 'results ' + cssClass;
+      document.getElementById('scoreMsg').textContent = msg;
+    }
+
+    function restart() {
+      currentQ = 0;
+      responses = {};
+      score = 0;
+      document.getElementById('resultsSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderVocab();
+    }
+
+    renderVocab();
+  </script>
+</body>
+</html>
