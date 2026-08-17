@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 1: KLIMAAT (B2/C1)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 750px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .intro-box { background: #f0f7ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107; }
+    .intro-box h3 { margin-bottom: 1rem; color: #f57f17; font-size: 16px; }
+    .intro-box p { font-size: 14px; line-height: 1.8; margin-bottom: 1rem; text-align: justify; }
+    
+    .vocab-section { margin-bottom: 2rem; }
+    .vocab-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 4px; }
+    .vocab-section.must h4 { background: #ffebee; color: #c62828; }
+    .vocab-section.action h4 { background: #fff3e0; color: #f57f17; }
+    .vocab-section.expr h4 { background: #e8f5e9; color: #2e7d32; }
+    .vocab-section.nice h4 { background: #e3f2fd; color: #1976d2; }
+    .vocab-section.autres h4 { background: #f3e5f5; color: #6a1b9a; }
+    .vocab-section.acronym h4 { background: #fce4ec; color: #c2185b; }
+    .vocab-section.c2 h4 { background: #f3e5f5; color: #7b1fa2; }
+    
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 6px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .fr { font-size: 12px; color: #666; font-style: italic; }
+    .vocab-item .def { font-size: 10px; color: #999; margin-top: 2px; }
+    
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; cursor: pointer; }
+    .option label { cursor: pointer; }
+    
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; min-height: 80px; }
+    
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin-bottom: 0.25rem; }
+    .traduction { color: #666; font-style: italic; font-size: 12px; }
+    
+    .tip-box { background: #fff3cd; border: 1px solid #ffc107; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; color: #856404; font-size: 13px; }
+    
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; font-size: 16px; }
+    .reading p { margin-bottom: 1rem; text-align: justify; font-size: 14px; line-height: 1.8; }
+    
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .comprehension-q strong { display: block; margin-bottom: 0.5rem; font-size: 13px; }
+    .comprehension-q label { display: block; margin: 0.5rem 0; font-size: 13px; }
+    
+    .required-words { background: #e8f5e9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .required-words strong { display: block; margin-bottom: 0.5rem; color: #2e7d32; }
+    .required-words p { font-size: 12px; margin: 0.25rem 0; color: #1976d2; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    
+    .secret-phrase-box {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      text-align: center;
+      color: #d63031;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 1px solid #fdcb6e;
+      animation: fadeIn 0.6s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .word-item { background: #e3f2fd; padding: 8px 12px; border-radius: 4px; cursor: move; display: inline-block; margin: 4px; }
+    .word-item.placed { background: #4caf50; color: white; }
+    .drop-zone { border: 2px dashed #1976d2; padding: 1rem; border-radius: 6px; margin: 1rem 0; min-height: 80px; background: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- SECTION 0: INTRO KLIMAAT -->
+    <div id="introSection" class="section active">
+      <div class="header">
+        <h1>Dag 1: KLIMAAT — Waarom?</h1>
+        <p>17 augustus — Inleiding + Dag 1 leren</p>
+      </div>
+      <div id="secretPhrasePos0"></div>
+      <div class="intro-box">
+        <h3>🌍 De mondiale klimaatcrisis — wetenschappelijke urgentie</h3>
+        <p>Het mondiale klimaat wordt op ongekende schaal veranderd door menselijke activiteiten. Sinds de industrialisatie zijn broeikasgasemissies exponentieel gestegen, en deze trend kan niet zonder drastische maatregelen worden omgekeerd. Temperatuurstijgingen die zonder onmiddellijke actie onafwendbaar zullen plaatsvinden, vormen een existentiële bedreiging voor alle ecosystemen. Daarom is klimaatmitigatie—het gerichte terugbrengen van broeikasgasemissies naar nul—niet langer optioneel, doch een absolute voorwaarde voor het voortbestaan van komende generaties. De wetenschap is eensluidend: zonder actie nu, zullen gevolgen voor decennia onverenigbaar zijn met menselijke welvaart.</p>
+        
+        <h3>🔬 Wetenschap onder politieke druk</h3>
+        <p>Hoewel wetenschappers wereldwijd eensgezind waarschuwen dat dit fenomeen werkelijk bestaat en door menselijke handelingen veroorzaakt wordt, wordt hun consensus nog steeds betwist door politieke belangengroepen. Deze groepen, die belast zouden worden met kostsallige transities naar duurzaamheid, verzetten zich hevig tegen regelgeving. Intussen kunnen klimaatveranderingen al waargenomen worden in stijgende zeespiegels, extremere weeromstandigheden, en verschuivende ecosystemen die niet langer zonder ernstige consequenties kunnen worden genegeerd. De discrepantie tussen wetenschappelijke zekerheid en politieke inertie wordt elk jaar duidelijker. Het IPCC (Intergovernmental Panel on Climate Change) stelt met 97% zekerheid dat de opwarming van menselijke oorsprong is—een consensus die zelfs in controversiële onderwerpen uniek is.</p>
+        
+        <h3>📊 Feiten en cijfers die niet kunnen worden genegeerd</h3>
+        <p>Jaarlijks worden meer dan 37 miljard ton CO2-equivalent uitgestoten door menselijke activiteiten. Deze emissies verzamelen in de atmosfeer, waar ze warmte insluiten en de aarde geleidelijk opwarmen. De gevolgen zijn al zichtbaar: zeeniveaus stijgen, glaciers smelten, extremere weerevents treden op, en ecosystemen verschuiven. Het albedo-effect (terugkaatsing van licht door ijs) verzwakt: minder ijs betekent meer absorptie van warmte, wat op zijn beurt meer smelting veroorzaakt. Dit is een zogenaamde "feedback loop"—een zelfversnellend proces dat niet langer zonder ingrijpen kan worden gestopt.</p>
+        
+        <h3>🌱 Mitigatie vs. Adaptatie — twee verschillende strategieën</h3>
+        <p>Mitigatie betent het terugdringen van broeikasgasemissies door overgang naar duurzame energiebronnen (wind, zon, kernenergie) en efficiëntie. Adaptatie daarentegen betekent het aanpassen van maatschappijen aan reeds onvermijdelijke klimaatveranderingen (dijken bouwen, droogtebesten plantage aanpassen, etc.). Ideaal zouden beide tegelijk moeten plaatsvinden, maar veel landen richten zich nog altijd alleen op adaptatie—een reactief en veel duurder beleid dan preventie.</p>
+        
+        <h3>📚 Nederlands B2/C1 als voertuig voor actie</h3>
+        <p>Het debat over klimaatbeleid in Nederland, België en Europa wordt in dit register gevoerd—met complexe termen als dekarbonisering, mitigatie versus adaptatie, tipping points, en carbon footprints. Je moet niet zomaar woorden kennen, maar hun betekenis en nuances volledig begrijpen: klimaatverandering (het fysische verschijnsel), klimaatcrisis (de maatschappelijke urgentie), en klimaatmitigatie (de strategische respons). Deze taalkundige precisie zul je nodig hebben om deel te nemen aan de meest vitale debatten van onze tijd. Professionals in EU-instituties, klimaatonderzoek, en duurzaam beleid communiceren in dit exact register. Dit dagboek zal je leren dat niveau te bereiken.</p>
+      </div>
+      <button class="btn btn-primary" onclick="startVocab()">Ik ben klaar — Start dag 1</button>
+    </div>
+
+    <!-- SECTION 1: VOCABULAIRE DAG 1 -->
+    <div id="vocabSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Vocabulaire Dag 1: KLIMAAT (B2/C1)</h1>
+      <div id="secretPhrasePos1"></div>
+      
+      <div class="vocab-section must">
+        <h4>🔴 MUST HAVE — Kernwoorden (7)</h4>
+        <div class="vocab-grid" id="vocabMust"></div>
+      </div>
+      
+      <div class="vocab-section action">
+        <h4>🟡 WERKWOORDEN — Actie (5)</h4>
+        <div class="vocab-grid" id="vocabAction"></div>
+      </div>
+      
+      <div class="vocab-section expr">
+        <h4>🟢 UITDRUKKINGEN — Collocaties (4)</h4>
+        <div class="vocab-grid" id="vocabExpr"></div>
+      </div>
+      
+      <div class="vocab-section nice">
+        <h4>🔵 NICE TO HAVE — Contexte (5)</h4>
+        <div class="vocab-grid" id="vocabNice"></div>
+      </div>
+      
+      <div class="vocab-section autres">
+        <h4>⚪ ANDERE WOORDEN — Aanvullend (10)</h4>
+        <div class="vocab-grid" id="vocabAutres"></div>
+      </div>
+      
+      <div class="vocab-section acronym">
+        <h4>🟠 ACRONYMES — Afkortingen (5)</h4>
+        <div class="vocab-grid" id="vocabAcronyms"></div>
+      </div>
+      
+      <div class="vocab-section c2">
+        <h4>🔶 C2 LEXIQUE AVANCÉ — Zeer moeilijk (6)</h4>
+        <div class="vocab-grid" id="vocabC2"></div>
+      </div>
+      
+      <div id="secretPhrasePos2"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (30 vragen B2/C1)</button>
+    </div>
+
+    <!-- SECTION 2: TEST DAG 1 -->
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/30</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="feedbackArea"></div>
+        <div id="tipArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: READING -->
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <div id="secretPhrasePos3"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <!-- SECTION 4: RESULTATEN -->
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 1</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/30</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <div id="secretPhrasePos4"></div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+      <div id="secretPhrasePos5"></div>
+    </div>
+  </div>
+
+  <script>
+    // ===== VOCABULAIRE DAG 1: KLIMAAT — B2/C1 =====
+    const vocabMust = [
+      { nl: 'klimaat / klimaatverandering / klimaatcrisis', fr: 'Climat / Changement climatique / Crise climatique' },
+      { nl: 'emissie / broeikasgasemissie / uitstoot', fr: 'Émission / Émission de GES / Rejet' },
+      { nl: 'mitigatie / mitigeren / gemitigeerd', fr: 'Atténuation / Atténuer / Atténué' },
+      { nl: 'duurzaam / duurzaamheid / duurzaamheidsdoelen', fr: 'Durable / Durabilité / Objectifs de durabilité' },
+      { nl: 'adaptatie / adapteren / aangepast', fr: 'Adaptation / Adapter / Adapté' },
+      { nl: 'fossiel / fossilisatie / fossielvrij', fr: 'Fossile / Fossilisation / Sans fossiles' },
+      { nl: 'broeikasgaseffect / broeikasgas / CO2-equivalent', fr: 'Effet de serre / Gaz à effet de serre / Équivalent CO2' }
+    ];
+
+    const vocabAction = [
+      { nl: 'verminderen / vermindering / verminderd', fr: 'Réduire / Réduction / Réduit' },
+      { nl: 'stijgen / stijging / gestegen', fr: 'Augmenter / Augmentation / Augmenté' },
+      { nl: 'bedreigen / bedreiging / bedreigd', fr: 'Menacer / Menace / Menacé' },
+      { nl: 'waarschuwen / waarschuwing / gewaarschuwd', fr: 'Avertir / Avertissement / Averti' },
+      { nl: 'vastellen / vaststelling / vastgesteld', fr: 'Établir / Établissement / Établi' }
+    ];
+
+    const vocabExpr = [
+      { nl: 'broeikasgasemissies terugbrengen / reduceren', fr: 'Réduire les émissions de GES' },
+      { nl: 'klimaatmaatregelen nemen / doorvoeren', fr: 'Prendre des mesures climatiques' },
+      { nl: 'naar duurzaamheid transitie / overgaan', fr: 'Transiter vers la durabilité' },
+      { nl: 'ecosystemen beschermen / bedreigd zijn', fr: 'Protéger les écosystèmes / être menacés' }
+    ];
+
+    const vocabNice = [
+      { nl: 'zeespiegel / zeewater / zee', fr: 'Niveau des mers / Eau de mer / Mer' },
+      { nl: 'weer / weersomstandigheden / klimaatpatroon', fr: 'Météo / Conditions météorologiques / Pattern climatique' },
+      { nl: 'ecosysteem / biotoop / habitat', fr: 'Écosystème / Biotope / Habitat' },
+      { nl: 'regelgeving / regulering / regelgevendе macht', fr: 'Réglementation / Régulation / Autorité réglementaire' },
+      { nl: 'tipping point / kritisch moment / omslagpunt', fr: 'Point de bascule / Moment critique / Point tournant' }
+    ];
+
+    const vocabAutres = [
+      { nl: 'dekarbonisering / dekarbon / koolstofneutraal', fr: 'Décarbonisation / Neutre en carbone' },
+      { nl: 'carbon footprint / voetafdruk / uitstootintensiteit', fr: 'Empreinte carbone / Intensité d\'émissions' },
+      { nl: 'weerbaarheid / veerkracht / weerstandskracht', fr: 'Résilience / Robustesse' },
+      { nl: 'industrialisatie / industrie / industrieel', fr: 'Industrialisation / Industrie / Industriel' },
+      { nl: 'betwisting / contestatie / ontkenning', fr: 'Contestation / Déni' },
+      { nl: 'ongekend / zonder voorgaande / historisch', fr: 'Sans précédent / Historique' },
+      { nl: 'existentieel / levensvatbaarheid / voortbestaan', fr: 'Existentiel / Survie' },
+      { nl: 'waarneming / observatie / constatering', fr: 'Observation / Constatation' },
+      { nl: 'veroorzaking / causaliteit / oorzaak-gevolg', fr: 'Causalité / Rapport de cause à effet' },
+      { nl: 'belangengroep / belanghebbende / stakeholder', fr: 'Groupe d\'intérêt / Partie prenante / Stakeholder' }
+    ];
+
+    const vocabAcronyms = [
+      { nl: 'IPCC', def: 'Intergovernmental Panel on Climate Change', fr: 'Panel intergouvernemental sur le climat' },
+      { nl: 'UNFCCC', def: 'UN Framework Convention on Climate Change', fr: 'Convention-cadre des Nations unies sur le climat' },
+      { nl: 'COP', def: 'Conference of the Parties', fr: 'Conférence des parties' },
+      { nl: 'CO2 / CO2-eq', def: 'Kooldioxide / Broeikasgasequivalent', fr: 'Dioxyde de carbone / Équivalent CO2' },
+      { nl: 'NDCS', def: 'Nationally Determined Contributions', fr: 'Contributions nationales déterminées' }
+    ];
+
+    const vocabC2 = [
+      { nl: 'antropogeen / menselijk-veroorzaakt / antropoceen', fr: 'Anthropogène / Ère de l\'Anthropocène' },
+      { nl: 'persistentie / duurzaamheid (in atmosfeer) / houdbaarheid', fr: 'Persistance / Durabilité (dans l\'atmosphère)' },
+      { nl: 'biosfeer / biota / biodiversiteit', fr: 'Biosphère / Biota / Biodiversité' },
+      { nl: 'radiatief gedrag / stralingsbalans / energieflux', fr: 'Comportement radiatif / Bilan radiatif / Flux d\'énergie' },
+      { nl: 'feedback mechanism / versterkingslus / terugkoppelingscyclus', fr: 'Mécanisme de rétroaction / Boucle de rétroaction' },
+      { nl: 'non-lineaire dynamics / kaotische systemen / bifurcatie', fr: 'Dynamiques non-linéaires / Bifurcation' }
+    ];
+
+    // ===== TEST QUESTIONS (30 — B2/C1) — 18 FILL + 3 ORDER + 6 INTRUS + 3 QCM =====
+    const questions = [
+      { type: 'fill', text: 'De mondiale __________ wordt door industrialisatie sterk beïnvloed.', ans: 'klimaatverandering', tip: 'Klimaat (noun) + verandering (noun) = klimaatverandering', fr: 'Le changement climatique' },
+      { type: 'fill', text: 'Broeikasgasemissies moeten drastisch __________ worden om catastrofes te voorkomen.', ans: 'gereduceerd', tip: 'Passif: reduceren → gereduceerd', fr: 'Être réduites' },
+      { type: 'fill', text: 'Temperatuurstijgingen zullen zonder maatregelen onafwendbaar worden __________. ', ans: 'werkelijkheid', tip: 'Werkelijk (adj) → werkelijkheid (noun): réalité', fr: 'Réalité' },
+      { type: 'fill', text: 'De __________ van zeeniveaus vormt een grote bedreiging voor kustgebieden.', ans: 'stijging', tip: 'Stijgen → stijging (nominalisatie)', fr: 'L\'augmentation du niveau des mers' },
+      { type: 'fill', text: 'Klimaat __________ is complexer dan veel mensen beseffen.', ans: 'mitigatie', tip: 'Mitigeren → mitigatie (Nominalisatie latijn)', fr: 'Atténuation climatique' },
+      { type: 'fill', text: 'Ecosystemen kunnen niet zonder __________ tegen klimaatschokken worden beschermd.', ans: 'adaptatie', tip: 'Adapteren → adaptatie (nominalisatie)', fr: 'Adaptation' },
+      { type: 'fill', text: 'Politieke __________ tegen kostsallige regelgeving blijft een belangrijk obstakel.', ans: 'verzet', tip: 'Zich verzetten → verzet (nominalisatie)', fr: 'Résistance' },
+      { type: 'fill', text: 'Broeikasgaseffect is een __________ waargenomen natuurkundig verschijnsel.', ans: 'goed', tip: 'Goed (adjectif) → goed beschreven/waargenomen verschijnsel', fr: 'Phénomène bien observé' },
+      { type: 'fill', text: 'De __________ van menselijke CO2 is onmiskenbaar wetenschappelijk bewezen.', ans: 'oorzakelijkheid', tip: 'Oorzaak + -lijkheid suffix = oorzakelijkheid (causalité)', fr: 'La causalité humaine' },
+      { type: 'fill', text: 'Fossielvrije energie moet worden __________ in toekomstig beleid.', ans: 'gepromoot', tip: 'Promoten → gepromoot (passif variant)', fr: 'Promue' },
+      { type: 'fill', text: 'Wetenschap en politiek kunnen op dit thema niet volledig __________ worden.', ans: 'gescheiden', tip: 'Scheiden → gescheiden (passif). Wetenschap en politiek kunnen niet volledig gescheiden worden', fr: 'Séparées' },
+      { type: 'fill', text: 'Deze __________ kan niet langer worden genegeerd, ondanks politieke weerstanden.', ans: 'problematiek', tip: 'Probleem + -atiek suffix = problematiek', fr: 'Cette problématique' },
+      { type: 'fill', text: 'Duurzaamheid moet __________ worden in alle politieke beslissingen.', ans: 'geïntegreerd', tip: 'Integreren → geïntegreerd (passif)', fr: 'Être intégrée' },
+      { type: 'fill', text: 'Extreme weeromstandigheden zullen zonder maatregelen nog __________ worden.', ans: 'erger', tip: 'Erg → erger (comparatif)', fr: 'Plus graves' },
+      { type: 'fill', text: 'De __________ van gletsjers en poolijs versnel alarmendgroei.', ans: 'smelting', tip: 'Smelten → smelting (nominalisatie)', fr: 'La fonte des glaciers' },
+      { type: 'fill', text: 'De __________ van ecosystemen gebeurt veel sneller dan in vorige eeuwen.', ans: 'verschuiving', tip: 'Verschuiven → verschuiving (nominalisatie)', fr: 'Le déplacement des écosystèmen' },
+      { type: 'fill', text: 'Internationale coöperatie zal __________ zijn voor het slagen van klimaatbeleid.', ans: 'essentieel', tip: 'Essence + -ieel suffix = essentieel', fr: 'Essentielle' },
+      { type: 'order', text: 'Zet in juiste volgorde (PASSIEF + NEGATIEF):', words: ['Dit', 'fenomeen', 'kan', 'niet', 'zonder', 'drastische', 'maatregelen', 'worden', 'omgekeerd'], correct: 'Dit fenomeen kan niet zonder drastische maatregelen worden omgekeerd', fr: 'Ce phénomène ne peut pas être inversé sans mesures drastiques' },
+      { type: 'intrus', text: 'Welk woord past NIET semantisch? broeikasgasemissies — CO2-equivalent — zeespiegel — industrialisatie', opts: ['broeikasgasemissies', 'CO2-equivalent', 'zeespiegel', 'industrialisatie'], ans: 'zeespiegel', fr: 'Zeespiegel est une conséquence, pas une cause' },
+      { type: 'intrus', text: 'Welk woord past NIET thematisch? mitigatie — adaptatie — duurzaamheid — weersomstandigheden', opts: ['mitigatie', 'adaptatie', 'duurzaamheid', 'weersomstandigheden'], ans: 'weersomstandigheden', fr: 'Weersomstandigheden = observation, pas stratégie' },
+      { type: 'qcm', text: 'Wat is het verschil tussen "klimaatverandering" en "klimaatcrisis"?', opts: ['Geen verschil', 'Klimaatverandering = het verschijnsel; klimaatcrisis = de urgentie/gevolgen', 'Klimaatcrisis is verouderd'], ans: 'Klimaatverandering = het verschijnsel; klimaatcrisis = de urgentie/gevolgen', fr: 'Changement = le phénomène; crise = l\'urgence' },
+      { type: 'fill', text: 'De __________ van wetenschappers staat vast: klimaatverandering is door mensen veroorzaakt.', ans: 'consensus', tip: 'Eensgezindheid = consensus (consensus latijn)', fr: 'Le consensus des scientifiques' },
+      { type: 'intrus', text: 'Welk woord past NIET? fossielvrij — duurzaam — hernieuwbaar — emissie', opts: ['fossielvrij', 'duurzaam', 'hernieuwbaar', 'emissie'], ans: 'emissie', fr: 'Emissie est le problème, pas la solution' },
+      { type: 'intrus', text: 'Welk woord past NIET? IPCC — UNFCCC — CO2 — COP', opts: ['IPCC', 'UNFCCC', 'CO2', 'COP'], ans: 'CO2', fr: 'CO2 est une molécule, pas une institution' },
+      { type: 'order', text: 'Zet in juiste volgorde (CONCESSIVE):', words: ['Hoewel', 'wetenschappers', 'eensgezind', 'waarschuwen,', 'betwisten', 'politieke', 'groepen', 'deze', 'feiten', 'nog', 'altijd'], correct: 'Hoewel wetenschappers eensgezind waarschuwen, betwisten politieke groepen deze feiten nog altijd', fr: 'Bien que les scientifiques avertissent, les groupes politiques contestent toujours' },
+      { type: 'qcm', text: 'Wat betekent "tipping point" in klimaatcontext?', opts: ['Een klein moment', 'Het kritieke moment waarop systemen niet-lineair instorten', 'Een debat moment'], ans: 'Het kritieke moment waarop systemen niet-lineair instorten', fr: 'Le moment critique où les systèmes s\'effondrent' },
+      { type: 'intrus', text: 'Welk woord past NIET? dekarbonisering — antropogeen — persistentie — voortbestaan', opts: ['dekarbonisering', 'antropogeen', 'persistentie', 'voortbestaan'], ans: 'voortbestaan', fr: 'Voortbestaan est une conséquence, pas un processus chimique' },
+      { type: 'intrus', text: 'Welk woord past NIET semantisch in klimaatcontext? mitigatie — regulering — industrie — adaptatie', opts: ['mitigatie', 'regulering', 'industrie', 'adaptatie'], ans: 'industrie', fr: 'Industrie est le problème, pas la solution' },
+      { type: 'order', text: 'Zet in juiste volgorde ("NIET ALLEEN...MAAR OOK"):', words: ['Klimaat', 'mitigatie', 'vereist', 'niet', 'alleen', 'technologie,', 'maar', 'ook', 'politieke', 'wil', 'en', 'internationale', 'samenwerking'], correct: 'Klimaatmitigatie vereist niet alleen technologie, maar ook politieke wil en internationale samenwerking', fr: 'L\'atténuation climatique nécessite non seulement...' },
+      { type: 'qcm', text: 'Welke stelling over fossiele brandstoffen klopt?', opts: ['Ze zullen nooit afgefaseerd kunnen worden', 'Ze kunnen zonder progressieve transitie niet beëindigd worden', 'Ze zijn niet het voornaamste klimaatprobleem'], ans: 'Ze kunnen zonder progressieve transitie niet beëindigd worden', fr: 'Elles ne peuvent pas être éliminées sans transition progressive' }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderVocab(data, elementId) {
+      const html = data.map(v => {
+        if (v.def) {
+          return `<div class="vocab-item"><div><div class="nl">${v.nl}</div><div style="font-size: 10px; color: #999; margin-top: 3px;">${v.def}</div></div><div class="fr">${v.fr}</div></div>`;
+        } else {
+          return `<div class="vocab-item"><div class="nl">${v.nl}</div><div class="fr">${v.fr}</div></div>`;
+        }
+      }).join('');
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    function renderAllVocab() {
+      renderVocab(vocabMust, 'vocabMust');
+      renderVocab(vocabAction, 'vocabAction');
+      renderVocab(vocabExpr, 'vocabExpr');
+      renderVocab(vocabNice, 'vocabNice');
+      renderVocab(vocabAutres, 'vocabAutres');
+      renderVocab(vocabAcronyms, 'vocabAcronyms');
+      renderVocab(vocabC2, 'vocabC2');
+    }
+
+    function startVocab() {
+      document.getElementById('introSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderAllVocab();
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `<div class="option"><input type="radio" name="ans" value="${o}" id="opt${i}"><label for="opt${i}">${o}</label></div>`).join('');
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div><input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div><div class="drop-zone" id="dropZone">Zet woorden hier</div><div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<div class="word-item" draggable="true" id="word${i}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">${w}</div>`;
+        });
+        content += `</div><button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      
+      if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        zone.ondragover = (e) => e.preventDefault();
+        zone.ondrop = (e) => dropWord(e);
+      }
+      
+      document.getElementById('nextBtn').disabled = true;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let answer = '';
+      let isCorrect = false;
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answer = selected.value;
+        isCorrect = answer === q.ans;
+      } else if (q.type === 'fill') {
+        answer = document.getElementById('fillInput').value.trim();
+        isCorrect = answer.toLowerCase() === q.ans.toLowerCase();
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item.placed')).map(w => w.textContent).join(' ');
+        answer = placed || '';
+        isCorrect = answer === q.correct;
+      }
+
+      if (isCorrect) score++;
+
+      const feedback = `<div class="feedback ${isCorrect ? 'correct' : 'incorrect'}"><div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div><div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div><div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div></div>`;
+      document.getElementById('feedbackArea').innerHTML = feedback;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function skipQuestion() {
+      nextQ();
+    }
+
+    let draggedElement = null;
+    function dragStart(e) {
+      draggedElement = e.target;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function dragEnd(e) {
+      draggedElement = null;
+    }
+    function dropWord(e) {
+      e.preventDefault();
+      const zone = document.getElementById('dropZone');
+      if (draggedElement && draggedElement !== e.target) {
+        draggedElement.classList.add('placed');
+        zone.appendChild(draggedElement);
+      }
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Klimaatverandering: feiten tegen ontkenning</h3>
+        <p>De wereld wordt geconfronteerd met een klimaatcrisis die niet langer kan worden betwist door rationele en wetenschappelijk ingestelde observateurs. Broeikasgasemissies zijn exponentieel gestegen sinds de industrialisatie, en dit verband kan zonder twijfel wetenschappelijk worden aangetoond. Temperatuurstijgingen, stijgende zeespiegels, en extremere weersomstandigheden worden al waargenomen in realtime en kunnen niet langer zonder ernstige wetenschappelijke onderbouwing worden genegeerd. Dit verschijnsel is zonder voorgaande in de recente geschiedenis van ons klimaat. De IPCC-rapporten van de afgelopen twee decennia hebben aantoonbaar aangetoond dat menselijke activiteiten verantwoordelijk zijn voor meer dan 95% van de waargenomen opwarming. Deze zekerheid is in de wetenschap uniek.</p>
+        
+        <p>Hoewel wetenschappers eensgezind waarschuwen op grond van decennia van onderzoek, betwisten politieke belangengroepen deze feiten nog altijd. De reden? Kostsallige maatregelen zouden worden vereist in transitie naar duurzaamheid, wat grote belangen bedreigt. Internationale regelgeving ter bescherming van ecosystemen stuit op obstakels waar nationale belangen worden gesteld boven gezamenlijke urgentie. Intussen kunnen ecosystemen niet zonder drastische adaptatiemaatregelen tegen klimaatschokken worden beschermd, en verdere vernietiging van biodiversiteit zal onafwendbaar zijn zonder onmiddellijke ingrepen. De opwarming van slechts 1.5°C—het criterium van het Parijs-akkoord—zal honderdduizenden soorten bedreigen. Bij 2°C opwarming worden heel ecosystemen onherroepelijk vernietigd, en menselijke samenlevingen zullen massale migratiestromen ervaren.</p>
+        
+        <p>Klimaatmitigatie vereist niet alleen technologie en financiering, maar ook politieke wil en internationale coöperatie die niet kan worden uitgesteld. Dekarbonisering van onze economie is niet langer optioneel—het is essentieel voor voortbestaan van komende generaties. Dit betekent concrete maatregelen: afbouw van steenkool en olie, massale investering in hernieuwbare energie (zonne- en windkracht), verbetering van energieefficiëntie in gebouwen, en overgang naar elektrisch vervoer. Niemand zal ontkennen dat deze transformatie kostbaar is—maar de kosten van niet-handelen zijn veel hoger. Zonder drastische veranderingen zal dit kritieke moment voorbijgaan, en zullen we in een situatie terechtkomen die niet langer kan worden omgekeerd. De tipping points—momenten waarop klimaatverandering zichzelf versnelt—zijn dicht naderbij.</p>
+        
+        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Hoe werden broeikasgasemissies gerelateerd aan menselijke activiteiten?</strong><br>
+            <input type="radio" name="comp1" value="a"> Dit kan wetenschappelijk niet worden aangetoond<br>
+            <input type="radio" name="comp1" value="b"> Dit kan zonder twijfel wetenschappelijk worden aangetoond<br>
+            <input type="radio" name="comp1" value="c"> Dit is omstreden in alle wetenschappelijke kringen
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Waarom betwisten politieke groepen de wetenschappelijke bevindingen?</strong><br>
+            <input type="radio" name="comp2" value="a"> Omdat deze niet kunnen worden geverifieerd<br>
+            <input type="radio" name="comp2" value="b"> Omdat kostsallige maatregelen zouden worden vereist<br>
+            <input type="radio" name="comp2" value="c"> Omdat wetenschappers niet kunnen worden vertrouwd
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Wat betekent "dit kritieke moment" in de tekst?</strong><br>
+            <input type="radio" name="comp3" value="a"> Een onbelangrijke tijdsperiode<br>
+            <input type="radio" name="comp3" value="b"> Het moment waarop maatregelen nog kunnen helpen / tipping point<br>
+            <input type="radio" name="comp3" value="c"> Het einde van alle hoop
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3-5 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• mitigatie</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• duurzaamheid</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• emissies</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasMitigatie = opinion.toLowerCase().includes('mitigatie');
+      const hasDuurzaamheid = opinion.toLowerCase().includes('duurzaamheid');
+      const hasEmissies = opinion.toLowerCase().includes('emissies');
+      
+      const wordCheck = `<div style="background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+        <strong>Vereiste woorden:</strong><br>
+        <span style="color: ${hasMitigatie ? '#4caf50' : '#f44336'};">• mitigatie: ${hasMitigatie ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasDuurzaamheid ? '#4caf50' : '#f44336'};">• duurzaamheid: ${hasDuurzaamheid ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasEmissies ? '#4caf50' : '#f44336'};">• emissies: ${hasEmissies ? '✓' : '✗'}</span>
+      </div>`;
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/30 (' + percent + '%)';
+      
+      let msg = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 2.';
+        document.getElementById('resultsBox').className = 'results excellent';
+      } else if (percent >= 56) {
+        msg = '→ Goed! Maar herhaal moeilijke vragen.';
+        document.getElementById('resultsBox').className = 'results good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        document.getElementById('resultsBox').className = 'results weak';
+      }
+      document.getElementById('scoreMsg').textContent = msg + wordCheck;
+    }
+
+    function restart() {
+      location.reload();
+    }
+
+    // ===== PHRASES SECRÈTES =====
+    const secretPhrases = [
+      "On est fier de toi. 💙",
+      "On t'aime très fort. 💛",
+      "Tu es fantastique! ✨",
+      "Tu vas y arriver! 🚀",
+      "Prends soin de toi. 🌸",
+      "Repose toi quand tu en as besoin. 💤",
+      "Aujourd'hui, fais toi plaisir. 🎉",
+      "Dors un peu quand tu es fatiguée. 🌙"
+    ];
+
+    function getRandomPhrase() {
+      const today = new Date().toISOString().split('T')[0];
+      const lastDate = localStorage.getItem('lastSecretPhraseDate');
+      const lastPhrase = localStorage.getItem('lastSecretPhrase');
+
+      if (lastDate !== today) {
+        let newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+        if (lastPhrase) {
+          while (newPhrase === lastPhrase) {
+            newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+          }
+        }
+        localStorage.setItem('lastSecretPhraseDate', today);
+        localStorage.setItem('lastSecretPhrase', newPhrase);
+        return newPhrase;
+      }
+      return lastPhrase || secretPhrases[0];
+    }
+
+    function getRandomPosition() {
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function displaySecretPhrase() {
+      const phrase = getRandomPhrase();
+      const position = getRandomPosition();
+      const boxId = 'secretPhrasePos' + position;
+      const box = document.getElementById(boxId);
+      if (box) {
+        box.innerHTML = '<div class="secret-phrase-box">' + phrase + '</div>';
+      }
+    }
+
+    displaySecretPhrase();
+  </script>
+</body>
+</html>
