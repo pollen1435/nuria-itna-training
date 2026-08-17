@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 5: IA (B2/C1)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 750px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .intro-box { background: #f0f7ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107; }
+    .intro-box h3 { margin-bottom: 1rem; color: #f57f17; font-size: 16px; }
+    .intro-box p { font-size: 14px; line-height: 1.8; margin-bottom: 1rem; text-align: justify; }
+    .vocab-section { margin-bottom: 2rem; }
+    .vocab-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 4px; }
+    .vocab-section.must h4 { background: #ffebee; color: #c62828; }
+    .vocab-section.action h4 { background: #fff3e0; color: #f57f17; }
+    .vocab-section.expr h4 { background: #e8f5e9; color: #2e7d32; }
+    .vocab-section.nice h4 { background: #e3f2fd; color: #1976d2; }
+    .vocab-section.autres h4 { background: #f3e5f5; color: #6a1b9a; }
+    .vocab-section.acronym h4 { background: #fce4ec; color: #c2185b; }
+    .vocab-section.c2 h4 { background: #f3e5f5; color: #7b1fa2; }
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 6px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .fr { font-size: 12px; color: #666; font-style: italic; }
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; cursor: pointer; }
+    .option label { cursor: pointer; }
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; min-height: 80px; }
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin-bottom: 0.25rem; }
+    .traduction { color: #666; font-style: italic; font-size: 12px; }
+    .tip-box { background: #fff3cd; border: 1px solid #ffc107; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; color: #856404; font-size: 13px; }
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; font-size: 16px; }
+    .reading p { margin-bottom: 1rem; text-align: justify; font-size: 14px; line-height: 1.8; }
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .comprehension-q strong { display: block; margin-bottom: 0.5rem; font-size: 13px; }
+    .comprehension-q label { display: block; margin: 0.5rem 0; font-size: 13px; }
+    .required-words { background: #e8f5e9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .required-words strong { display: block; margin-bottom: 0.5rem; color: #2e7d32; }
+    .required-words p { font-size: 12px; margin: 0.25rem 0; color: #1976d2; }
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    .secret-phrase-box { background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); padding: 1rem 1.5rem; border-radius: 8px; margin: 1rem 0; text-align: center; color: #d63031; font-style: italic; font-weight: 500; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #fdcb6e; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="introSection" class="section active">
+      <h1 style="margin-bottom: 0.5rem;">Dag 5: ARTIFICIËLE INTELLIGENTIE (IA) — Technologie & Ethiek</h1>
+      <p style="font-size: 13px; color: #666; margin-bottom: 2rem;">21 augustus — IA transformeert werkplekken en samenleving</p>
+      <div id="secretPhrasePos0"></div>
+      <div class="intro-box">
+        <h3>🤖 IA is Niet Toekomst—Het is Nu</h3>
+        <p>Kunstmatige intelligentie is niet meer science fiction. Machine learning algorithms controleren aanbevelingen (Netflix, Amazon), vertaalmachines (Google Translate), gezichtherkenning, medische diagnostiek, en financiële prognoses. IA is alomtegenwoordig. Maar met deze kracht komt onzekerheid: wie controleert deze algoritmes? Hoe zorgen we ervoor dat IA onbevooroordeeld is? Wat gebeurt er met jobs die door IA vervangen worden? Dit zijn niet academische vragen—zij bepalen de toekomst van miljarden mensen.</p>
+        
+        <h3>💡 Machine Learning — Hoe Werkt Het?</h3>
+        <p>Machine learning is een tak van IA waarin computersystemen leren van data zonder expliciet geprogrammeerd te worden. Een systeem krijgt miljarden voorbeelden, identificeert patronen, en kan dan voorspellingen doen of taken uitvoeren. Dit is krachtig maar ook risicovol: als trainingsdata voorgeprogrammeerde vooroordelen bevat, zal het algoritme die vooroordelen reproduceren—of versterken. Voorbeelden: Amazon's hiring algoritme dat vrouwen discrimineerde, Google's beeldherkenning dat zwarte gezichten misidentificeerde. Dit toont aan dat "neutrale" technologie niet bestaat: technologie weerspiegelt de waarden en vooroordelen van wie haar creëert.</p>
+        
+        <h3>⚖️ Ethiek en Regelgeving</h3>
+        <p>De EU kampeert met IA Act—wetgeving die voorschrijft hoe IA mag worden gebruikt, vooral in risicovolle domeinen (rechtssysteem, werkgeverschap, medische diagnostiek). Dit is voorkomen van misbruik. Tegelijkertijd is regelgeving complex: te streng en innovatie wordt geremd; te laks en risico's worden genegeerd. Dit register—ethiek, transparantie, verantwoordelijkheid—wordt essentieel voor beleidsmakers, technologen, en werknemers die IA gebruiken of eraan blootgesteld zijn.</p>
+      </div>
+      <button class="btn btn-primary" onclick="startVocab()">Start dag 5</button>
+    </div>
+
+    <div id="vocabSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Vocabulaire Dag 5: ARTIFICIËLE INTELLIGENTIE (B2/C1)</h1>
+      <div id="secretPhrasePos1"></div>
+      <div class="vocab-section must"><h4>🔴 MUST HAVE (7)</h4><div class="vocab-grid" id="vocabMust"></div></div>
+      <div class="vocab-section action"><h4>🟡 WERKWOORDEN (5)</h4><div class="vocab-grid" id="vocabAction"></div></div>
+      <div class="vocab-section expr"><h4>🟢 UITDRUKKINGEN (4)</h4><div class="vocab-grid" id="vocabExpr"></div></div>
+      <div class="vocab-section nice"><h4>🔵 NICE TO HAVE (5)</h4><div class="vocab-grid" id="vocabNice"></div></div>
+      <div class="vocab-section autres"><h4>⚪ ANDERE WOORDEN (10)</h4><div class="vocab-grid" id="vocabAutres"></div></div>
+      <div class="vocab-section acronym"><h4>🟠 ACRONYMES (5)</h4><div class="vocab-grid" id="vocabAcronyms"></div></div>
+      <div class="vocab-section c2"><h4>🔶 C2 LEXIQUE (6)</h4><div class="vocab-grid" id="vocabC2"></div></div>
+      <div id="secretPhrasePos2"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start test (30 vragen)</button>
+    </div>
+
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/30</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="feedbackArea"></div>
+        <div id="tipArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <div id="secretPhrasePos3"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 5</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/30</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <div id="secretPhrasePos4"></div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+      <div id="secretPhrasePos5"></div>
+    </div>
+  </div>
+
+  <script>
+    const vocabMust = [
+      { nl: 'kunstmatige intelligentie (IA) / artificial intelligence (AI)', fr: 'Intelligence Artificielle (IA) / Artificial Intelligence (AI)' },
+      { nl: 'machine learning / leren van data / algoritme', fr: 'Machine Learning / Apprentissage par les données / Algorithme' },
+      { nl: 'data / dataset / training data', fr: 'Données / Jeu de données / Données d\'entraînement' },
+      { nl: 'automatisering / automaat / automatisch', fr: 'Automatisation / Automatique' },
+      { nl: 'ethiek / bias / vooroordeel', fr: 'Éthique / Biais / Préjugé' },
+      { nl: 'transparantie / verklaarbaar / black box', fr: 'Transparence / Explicable / Boîte noire' },
+      { nl: 'regelgeving / compliance / regelhandhaving', fr: 'Réglementation / Conformité / Application des règles' }
+    ];
+
+    const vocabAction = [
+      { nl: 'trainen / leren / voorspellen', fr: 'Entraîner / Apprendre / Prédire' },
+      { nl: 'classificeren / categoriseren / herkennen', fr: 'Classifier / Catégoriser / Reconnaître' },
+      { nl: 'controleren / monitoren / testen', fr: 'Contrôler / Surveiller / Tester' },
+      { nl: 'verbeteren / optimaliseren / finetunen', fr: 'Améliorer / Optimiser / Affiner' },
+      { nl: 'bedreigen / risico veroorzaken / misbruikt', fr: 'Menacer / Causer un risque / Être abusé' }
+    ];
+
+    const vocabExpr = [
+      { nl: 'deep learning / diep leren / neurale netwerken', fr: 'Deep Learning / Réseaux de neurones' },
+      { nl: 'bias in algoritmes / vooroordeel in AI / discriminatie', fr: 'Biais dans les algorithmes / Discrimination en IA' },
+      { nl: 'automatisering van jobs / werkplaatsautomatisering / jobverlies', fr: 'Automatisation des emplois / Perte d\'emplois' },
+      { nl: 'verantwoording / transparantie / explicabiliteit', fr: 'Responsabilité / Transparence / Explicabilité' }
+    ];
+
+    const vocabNice = [
+      { nl: 'computationeel / numeriek / mathematisch', fr: 'Computationnel / Numérique / Mathématique' },
+      { nl: 'inferentie / gevolgtrekking / output', fr: 'Inférence / Conclusion / Output' },
+      { nl: 'generatief / genereren / synthetic', fr: 'Génératif / Générer / Synthétique' },
+      { nl: 'supervision / gelabeld / ongelabeld', fr: 'Supervision / Étiqueté / Non-étiqueté' },
+      { nl: 'gradient descent / optimalisering / convergentie', fr: 'Descente de gradient / Optimisation / Convergence' }
+    ];
+
+    const vocabAutres = [
+      { nl: 'natuurlijke taalverwerking / NLP / taalmodellen', fr: 'Traitement du Langage Naturel / NLP / Modèles de langage' },
+      { nl: 'computervision / gezichtherkenning / beeldanalyse', fr: 'Vision par ordinateur / Reconnaissance faciale / Analyse d\'image' },
+      { nl: 'reinforcement learning / beloningstechniek / training door feedback', fr: 'Apprentissage par renforcement / Récompense' },
+      { nl: 'overfitting / underfitting / generalisatie', fr: 'Surapprentissage / Sous-apprentissage / Généralisation' },
+      { nl: 'hyperparameter / tuning / configuratie', fr: 'Hyperparamètre / Optimisation / Configuration' },
+      { nl: 'cross-validation / validatieset / test set', fr: 'Validation croisée / Ensemble de validation / Ensemble de test' },
+      { nl: 'confusion matrix / precision / recall', fr: 'Matrice de confusion / Précision / Rappel' },
+      { nl: 'clustering / segmentatie / groepering', fr: 'Clustering / Segmentation / Regroupement' },
+      { nl: 'ensemble method / voting / ensemble learning', fr: 'Méthode d\'ensemble / Vote / Apprentissage d\'ensemble' },
+      { nl: 'adversarial attack / robustness / vulnerability', fr: 'Attaque adversariale / Robustesse / Vulnérabilité' }
+    ];
+
+    const vocabAcronyms = [
+      { nl: 'AI / AGI / ASI', def: 'Artificial Intelligence / Artificial General Intelligence / Artificial Super Intelligence', fr: 'IA / AGI / ASI' },
+      { nl: 'ML', def: 'Machine Learning', fr: 'Apprentissage Automatique' },
+      { nl: 'DL', def: 'Deep Learning', fr: 'Apprentissage Profond' },
+      { nl: 'NLP', def: 'Natural Language Processing', fr: 'Traitement du Langage Naturel' },
+      { nl: 'CV', def: 'Computer Vision', fr: 'Vision par Ordinateur' }
+    ];
+
+    const vocabC2 = [
+      { nl: 'stochastisch / deterministisch / probabilistisch', fr: 'Stochastique / Déterministe / Probabiliste' },
+      { nl: 'emergent behavior / eigenschap / zelforganisatie', fr: 'Comportement émergent / Propriété / Auto-organisation' },
+      { nl: 'interpretability / explainability / LIME / SHAP', fr: 'Interprétabilité / Explicabilité / LIME / SHAP' },
+      { nl: 'catastrophic forgetting / continual learning / lifelong learning', fr: 'Oubli Catastrophique / Apprentissage Continu' },
+      { nl: 'concept drift / distribution shift / covariate shift', fr: 'Décalage de Concept / Changement de Distribution' },
+      { nl: 'federated learning / privacy-preserving / differential privacy', fr: 'Apprentissage Fédéré / Préservation de la Vie Privée / Vie Privée Différentielle' }
+    ];
+
+    const questions = [
+      { type: 'fill', text: 'Kunstmatige intelligentie is een technologie die __________ van grote hoeveelheden data kan leren.', ans: 'patronen', tip: 'Patroon → patronen (plural)', fr: 'Motifs' },
+      { type: 'fill', text: 'Machine learning algoritmes kunnen __________ reproduceert als trainingsdata voorgeprogrammeerde vooroordelen bevat.', ans: 'bias', tip: 'Bias = vooroordeel (ook in Nederlands) ', fr: 'Biais' },
+      { type: 'fill', text: 'Gezichtherkenning door AI had problemen omdat het __________ van niet-blanke mensen minder nauwkeurig was.', ans: 'herkenning', tip: 'Herkennen → herkenning (nominalisatie)', fr: 'Reconnaissance' },
+      { type: 'fill', text: 'De EU AI Act is ontworpen om __________ van kunstmatige intelligentie te voorkomen.', ans: 'misbruik', tip: 'Misbruiken → misbruik (nominalisatie)', fr: 'Abus' },
+      { type: 'fill', text: 'Transparantie in AI betekent dat we kunnen __________ waarom een algoritme bepaalde beslissingen neemt.', ans: 'begrijpen', tip: 'Begrijpen = comprendre', fr: 'Comprendre' },
+      { type: 'fill', text: 'IA zal waarschijnlijk veel routinematige jobs __________ in de komende decennia.', ans: 'automatiseren', tip: 'Automatiseren = automatiser (to automate)', fr: 'Automatiser' },
+      { type: 'fill', text: 'Machine learning modellen worden getraind op datasets die miljoenen __________ kunnen bevatten.', ans: 'voorbeelden', tip: 'Voorbeeld → voorbeelden (plural)', fr: 'Exemples' },
+      { type: 'fill', text: 'Deep learning is een __________ van machine learning die neurale netwerken gebruikt.', ans: 'tak', tip: 'Tak = branche / domaine', fr: 'Branche' },
+      { type: 'fill', text: 'Ethische __________ zijn cruciaal bij het ontwerpen van AI-systemen die mensenleven beïnvloeden.', ans: 'overwegingen', tip: 'Overwegen → overwegingen (nominalisatie)', fr: 'Considérations éthiques' },
+      { type: 'fill', text: 'Jobverlies door __________ is een reëel risico voor arbeiders in routine-intesieve sectoren.', ans: 'automatisering', tip: 'Automatiseren → automatisering', fr: 'Automatisation' },
+      { type: 'fill', text: 'IA-systemen moeten __________ kunnen zijn—d.w.z. hun beslissingen moeten uitlegbaar zijn.', ans: 'verklaarbaar', tip: 'Verklaren → verklaarbaar (adj)', fr: 'Explicable' },
+      { type: 'fill', text: 'Amazon\'s IA recruiting tool werd __________ omdat het discrimineerde tegen vrouwen.', ans: 'uitgeschakeld', tip: 'Uitschakelen → uitgeschakeld (passif)', fr: 'Désactivé' },
+      { type: 'fill', text: 'Natural Language Processing (NLP) stelt machines in staat __________ humane taal te begrijpen.', ans: 'natuurlijke', tip: 'Natuurlijke = natural / normale taal', fr: 'Naturelle' },
+      { type: 'fill', text: 'Computer Vision (CV) geeft machines het vermogen om __________ te herkennen en analyseren.', ans: 'beelden', tip: 'Beeld → beelden (plural): images', fr: 'Images' },
+      { type: 'fill', text: 'Overfitting treedt op wanneer een model te dicht __________ aan trainingsdata en slecht generaliseert.', ans: 'aansluit', tip: 'Aansluiten = fit / match closely', fr: 'S\'ajuste' },
+      { type: 'fill', text: 'Regulering van IA moet __________ zijn—streng genoeg om risico\'s te beheersen maar niet zodanig innovatie te blokkeren.', ans: 'evenwichtig', tip: 'Evenwicht → evenwichtig (adj)', fr: 'Équilibré' },
+      { type: 'fill', text: 'Adversarial attacks zijn methoden om __________ in AI-systemen te vinden en uit te buiten.', ans: 'kwetsbaarheden', tip: 'Kwetsbaar → kwetsbaarheden (plural)', fr: 'Vulnérabilités' },
+      { type: 'fill', text: 'Federated learning stelt meerder partijen in staat samen te __________ zonder centrale dataverzameling.', ans: 'werken', tip: 'Samenwerken = collaborer', fr: 'Collaborer' },
+      { type: 'order', text: 'Zet in juiste volgorde (PASSIEF):', words: ['Bias', 'in', 'algoritmes', 'kan', 'niet', 'zonder', 'zorgvuldige', 'trainingsdata', 'worden', 'voorkomen'], correct: 'Bias in algoritmes kan niet zonder zorgvuldige trainingsdata worden voorkomen', fr: 'Le biais ne peut pas être prévenu' },
+      { type: 'intrus', text: 'Welk woord past NIET? machine learning — deep learning — transfer learning — learning curve', opts: ['machine learning', 'deep learning', 'transfer learning', 'learning curve'], ans: 'learning curve', fr: 'Learning curve est métaphorique, pas IA-techniek' },
+      { type: 'intrus', text: 'Welk woord past NIET? AI Act — GDPR — NLP — GDPR', opts: ['AI Act', 'GDPR', 'NLP', 'CV'], ans: 'CV', fr: 'CV is techniek, niet regelgeving' },
+      { type: 'qcm', text: 'Waarom kunnen algoritmes vooroordelen reproduceren?', opts: ['Ze zijn altijd neutraal', 'Voorgeprogrammeerde vooroordelen in trainingsdata worden meegelijnd', 'Programmeurs haten bepaalde groepen'], ans: 'Voorgeprogrammeerde vooroordelen in trainingsdata worden meegelijnd', fr: 'Les biais dans les données d\'entraînement' },
+      { type: 'fill', text: 'Het __________ effect beschrijft hoe algoritmes werkplekken permanent transformeren.', ans: 'automatiserings', tip: 'Automatisering + effect = automatiseringseffect', fr: 'Effet d\'automatisation' },
+      { type: 'intrus', text: 'Welk woord past NIET? transparantie — verklaarbaraheid — explicabiliteit — privacy', opts: ['transparantie', 'verklaarbaraheid', 'explicabiliteit', 'privacy'], ans: 'privacy', fr: 'Privacy = confidentialité, niet explicabilité' },
+      { type: 'intrus', text: 'Welk woord past NIET? stochastisch — probabilistisch — deterministisch — economisch', opts: ['stochastisch', 'probabilistisch', 'deterministisch', 'economisch'], ans: 'economisch', fr: 'Economisch is context, niet mathematisch concept' },
+      { type: 'order', text: 'Zet in juiste volgorde (CONCESSIVE):', words: ['Hoewel', 'AI', 'enorm', 'voordeel', 'biedt,', 'dreigt', 'het', 'ook', 'baanverlies', 'en', 'ethische', 'risico\'s'], correct: 'Hoewel AI enorm voordeel biedt, dreigt het ook baanverlies en ethische risico\'s', fr: 'Bien que l\'IA offre d\'énormes avantages' },
+      { type: 'qcm', text: 'Wat betekent "black box" in AI?', opts: ['Een donkere computer', 'Systemen waarvan we de interne besluitvormingslogica niet begrijpen', 'Verboden software'], ans: 'Systemen waarvan we de interne besluitvormingslogica niet begrijpen', fr: 'Des systèmes dont on ne comprend pas la logique' },
+      { type: 'intrus', text: 'Welk woord past NIET? NLP — CV — RL — WIFI', opts: ['NLP', 'CV', 'RL', 'WIFI'], ans: 'WIFI', fr: 'WIFI est réseau, pas type d\'IA' },
+      { type: 'order', text: 'Zet in juiste volgorde (NIET ALLEEN...MAAR OOK):', words: ['IA-regelgeving', 'moet', 'niet', 'alleen', 'risico\'s', 'bestrijden', 'maar', 'ook', 'innovatie', 'stimuleren', 'en', 'eerlijkheid', 'waarborgen'], correct: 'IA-regelgeving moet niet alleen risico\'s bestrijden maar ook innovatie stimuleren en eerlijkheid waarborgen', fr: 'La régulation doit non seulement...' },
+      { type: 'qcm', text: 'Welke van deze is een echt AI-risico?', opts: ['IA denkt te snel', 'Diskriminatie door biased algoritmes', 'Computers worden warm'], ans: 'Diskriminatie door biased algoritmes', fr: 'Discrimination par les algorithmes' }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderVocab(data, elementId) {
+      const html = data.map(v => {
+        if (v.def) {
+          return `<div class="vocab-item"><div><div class="nl">${v.nl}</div><div style="font-size: 10px; color: #999; margin-top: 3px;">${v.def}</div></div><div class="fr">${v.fr}</div></div>`;
+        } else {
+          return `<div class="vocab-item"><div class="nl">${v.nl}</div><div class="fr">${v.fr}</div></div>`;
+        }
+      }).join('');
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    function renderAllVocab() {
+      renderVocab(vocabMust, 'vocabMust');
+      renderVocab(vocabAction, 'vocabAction');
+      renderVocab(vocabExpr, 'vocabExpr');
+      renderVocab(vocabNice, 'vocabNice');
+      renderVocab(vocabAutres, 'vocabAutres');
+      renderVocab(vocabAcronyms, 'vocabAcronyms');
+      renderVocab(vocabC2, 'vocabC2');
+    }
+
+    function startVocab() {
+      document.getElementById('introSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderAllVocab();
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `<div class="option"><input type="radio" name="ans" value="${o}" id="opt${i}"><label for="opt${i}">${o}</label></div>`).join('');
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div><input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div><div style="border: 2px dashed #1976d2; padding: 1rem; border-radius: 6px; margin: 1rem 0; min-height: 80px; background: #f9f9f9;" id="dropZone">Zet woorden hier</div><div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<div style="background: #e3f2fd; padding: 8px 12px; border-radius: 4px; cursor: move; display: inline-block; margin: 4px;" class="word-item" draggable="true" id="word${i}" ondragstart="dragStart(event)" ondragend="dragEnd(event)">${w}</div>`;
+        });
+        content += `</div><button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      document.getElementById('nextBtn').disabled = true;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let answer = '';
+      let isCorrect = false;
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answer = selected.value;
+        isCorrect = answer === q.ans;
+      } else if (q.type === 'fill') {
+        answer = document.getElementById('fillInput').value.trim();
+        isCorrect = answer.toLowerCase() === q.ans.toLowerCase();
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item')).map(w => w.textContent).join(' ');
+        answer = placed || '';
+        isCorrect = answer === q.correct;
+      }
+
+      if (isCorrect) score++;
+
+      const feedback = `<div class="feedback ${isCorrect ? 'correct' : 'incorrect'}"><div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div><div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div><div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div></div>`;
+      document.getElementById('feedbackArea').innerHTML = feedback;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function skipQuestion() {
+      nextQ();
+    }
+
+    let draggedElement = null;
+    function dragStart(e) {
+      draggedElement = e.target;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function dragEnd(e) {
+      draggedElement = null;
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Kunstmatige Intelligentie — Kracht en Verantwoordelijkheid</h3>
+        <p>Kunstmatige intelligentie is niet meer een abstracte toekomstfantasie. Het is ingebed in onze dagelijkse apparaten: Netflix aanbevelingen, Google vertaalmachines, medicijnontdekking, financiële prognoses, en zelfs personeelsbeslissingen. Deze systemen leren niet van expliciete regels maar van patronen in data. Machine learning is een revolitionaire benadering, maar het heeft een kritiek risico: als trainingsdata voorgeprogrammeerde vooroordelen bevat, zal het algoritme die bias reproduceren—of versterken. Amazon's hiring algoritme discrimineerde tegen vrouwen; Google's gezichtherkenning was aanzienlijk minder nauwkeurig voor donkerder huid. Dit toont aan dat "neutrale" technologie niet bestaat.</p>
+        
+        <p>Regelgeving volgt—soms te langzaam. De EU AI Act probeert IA-risico's te beheersen, vooral in gevoelige domeinen (rechtssystemen, werkgeving, medische diagnose). Maar regelgeving is delicaat: te streng remt innovatie; te laks verzwakt veiligheid. Dit register—ethiek, transparantie, verantwoordelijkheid—zal essentieel zijn voor iedereen die IA ontwikkelt, beheert, of eraan blootgesteld is. Beleidsmakers, technologen, werknemers—allemaal moeten het kunnen begrijpen.</p>
+        
+        <p>Het grootste risico? Jobverlies. IA zal massief routinewerk automatiseren. Dit kan fantastisch zijn—minder menselijk werk aan repetitieve taken—maar zonder transitieplanning zijn gevolgen catastrofaal voor arbeiders. Hoe zorgen we ervoor dat herscooling, sociaal vangnet, en mentaliteitsverandering plaats kunnen vinden? Dit is niet technisch maar politiek en moreel.</p>        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Hoe kunnen algoritmes bias reproduceren?</strong><br>
+            <input type="radio" name="comp1" value="a"> Ze worden door vooroordelige programmeurs gemaakt<br>
+            <input type="radio" name="comp1" value="b"> Voorgeprogrammeerde vooroordelen in trainingsdata worden meegelijnd<br>
+            <input type="radio" name="comp1" value="c"> Ze zijn altijd neutraal
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Wat is het doel van de EU AI Act?</strong><br>
+            <input type="radio" name="comp2" value="a"> IA te stoppen<br>
+            <input type="radio" name="comp2" value="b"> IA-risico's te beheersen in gevoelige domeinen<br>
+            <input type="radio" name="comp2" value="c"> IA goedkoper te maken
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Wat is het grootste risico van IA voor werknemers?</strong><br>
+            <input type="radio" name="comp3" value="a"> Minder vriendelijk management<br>
+            <input type="radio" name="comp3" value="b"> Massaal jobverlies door automatisering<br>
+            <input type="radio" name="comp3" value="c"> Te veel training
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3-5 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• kunstmatige intelligentie</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• ethiek</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• regelgeving</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasIA = opinion.toLowerCase().includes('kunstmatige intelligentie') || opinion.toLowerCase().includes('ai');
+      const hasEthiek = opinion.toLowerCase().includes('ethiek');
+      const hasRegelgeving = opinion.toLowerCase().includes('regelgeving');
+      
+      const wordCheck = `<div style="background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+        <strong>Vereiste woorden:</strong><br>
+        <span style="color: ${hasIA ? '#4caf50' : '#f44336'};">• kunstmatige intelligentie: ${hasIA ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasEthiek ? '#4caf50' : '#f44336'};">• ethiek: ${hasEthiek ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasRegelgeving ? '#4caf50' : '#f44336'};">• regelgeving: ${hasRegelgeving ? '✓' : '✗'}</span>
+      </div>`;
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/30 (' + percent + '%)';
+      
+      let msg = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 6.';
+        document.getElementById('resultsBox').className = 'results excellent';
+      } else if (percent >= 56) {
+        msg = '→ Goed! Maar herhaal moeilijke vragen.';
+        document.getElementById('resultsBox').className = 'results good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        document.getElementById('resultsBox').className = 'results weak';
+      }
+      document.getElementById('scoreMsg').textContent = msg + wordCheck;
+    }
+
+    function restart() {
+      location.reload();
+    }
+
+    const secretPhrases = [
+      "On est fier de toi. 💙",
+      "On t'aime très fort. 💛",
+      "Tu es fantastique! ✨",
+      "Tu vas y arriver! 🚀",
+      "Prends soin de toi. 🌸",
+      "Repose toi quand tu en as besoin. 💤",
+      "Aujourd'hui, fais toi plaisir. 🎉",
+      "Dors un peu quand tu es fatiguée. 🌙"
+    ];
+
+    function getRandomPhrase() {
+      const today = new Date().toISOString().split('T')[0];
+      const lastDate = localStorage.getItem('lastSecretPhraseDate');
+      const lastPhrase = localStorage.getItem('lastSecretPhrase');
+
+      if (lastDate !== today) {
+        let newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+        if (lastPhrase) {
+          while (newPhrase === lastPhrase) {
+            newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+          }
+        }
+        localStorage.setItem('lastSecretPhraseDate', today);
+        localStorage.setItem('lastSecretPhrase', newPhrase);
+        return newPhrase;
+      }
+      return lastPhrase || secretPhrases[0];
+    }
+
+    function getRandomPosition() {
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function displaySecretPhrase() {
+      const phrase = getRandomPhrase();
+      const position = getRandomPosition();
+      const boxId = 'secretPhrasePos' + position;
+      const box = document.getElementById(boxId);
+      if (box) {
+        box.innerHTML = '<div class="secret-phrase-box">' + phrase + '</div>';
+      }
+    }
+
+    displaySecretPhrase();
+  </script>
+</body>
+</html>
