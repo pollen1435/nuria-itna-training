@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 — 14 Dagen Training Programma</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1a1a1a; 
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    
+    .container { max-width: 900px; margin: 0 auto; }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+      padding: 2rem;
+    }
+    
+    .header h1 { 
+      font-size: 32px; 
+      font-weight: 600; 
+      margin-bottom: 0.5rem;
+    }
+    
+    .header p { 
+      font-size: 16px; 
+      opacity: 0.95;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: #4ade80;
+      width: 35.7%; /* 5 out of 14 days */
+      transition: width 0.3s ease;
+    }
+    
+    .progress-text {
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      margin-top: 0.5rem;
+      opacity: 0.9;
+    }
+    
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .day-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .day-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .day-card.completed {
+      border-left: 5px solid #4ade80;
+    }
+    
+    .day-card.coming-soon {
+      opacity: 0.6;
+      cursor: default;
+    }
+    
+    .day-card.coming-soon:hover {
+      transform: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .day-number {
+      font-size: 12px;
+      font-weight: 600;
+      color: #667eea;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+    
+    .day-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #1a1a1a;
+    }
+    
+    .day-description {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+    
+    .day-topics {
+      font-size: 12px;
+      color: #999;
+      border-top: 1px solid #eee;
+      padding-top: 0.75rem;
+      margin-top: 1rem;
+    }
+    
+    .day-topics span {
+      display: inline-block;
+      background: #f0f0f0;
+      padding: 0.25rem 0.75rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .badge-completed {
+      display: inline-block;
+      background: #4ade80;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    .badge-coming {
+      display: inline-block;
+      background: #ddd;
+      color: #666;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    .stats {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+    
+    .stat-box {
+      padding: 1rem;
+    }
+    
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 13px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .info-section h2 {
+      font-size: 18px;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+    
+    .info-section p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 0.75rem;
+    }
+    
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    .schedule-table th,
+    .schedule-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .schedule-table th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .schedule-table tr.completed {
+      background: #f0fdf4;
+    }
+    
+    .schedule-table tr.coming-soon td {
+      color: #999;
+    }
+    
+    .tag-completed {
+      display: inline-block;
+      background: #4ade80;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .tag-coming {
+      display: inline-block;
+      background: #ddd;
+      color: #999;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .footer {
+      text-align: center;
+      color: white;
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🇳🇱 NURIA ITNA B2 Training</h1>
+      <p>14 Dagen Intensief Nederlands — KULeuven Voorbereiding</p>
+      
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <div class="progress-text">5 van 14 dagen voltooid (36%)</div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-number">100</div>
+        <div class="stat-label">Vocabulaire Items</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">20</div>
+        <div class="stat-label">Vragen per Dag</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Thema's / Week</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">B2→C1</div>
+        <div class="stat-label">Niveau Doelstelling</div>
+      </div>
+    </div>
+    
+    <h2 style="color: white; margin-bottom: 1.5rem; font-size: 22px;">📚 Trainingsmodules</h2>
+    
+    <div class="days-grid">
+      <!-- WEEK 1 — VOLTOOID -->
+      <a href="klimaat.html" class="day-card completed">
+        <div class="day-number">Dag 1</div>
+        <div class="day-title">🌍 KLIMAAT</div>
+        <div class="day-description">Wetenschap, broeikasgassen, mitigatie, adaptatie, fossielvrij toekomst</div>
+        <div class="day-topics">
+          <span>Klimaatverandering</span>
+          <span>Emissies</span>
+          <span>Duurzaamheid</span>
+        </div>
+        <div class="badge-completed">✓ VOLTOOID</div>
+      </a>
+      
+      <a href="energie.html" class="day-card completed">
+        <div class="day-number">Dag 2</div>
+        <div class="day-title">⚡ ENERGIE</div>
+        <div class="day-description">Energietransitie, hernieuwbare bronnen, grid-balancing, intermitentie</div>
+        <div class="day-topics">
+          <span>Zon & Wind</span>
+          <span>Fossiel → Groen</span>
+          <span>Technologie</span>
+        </div>
+        <div class="badge-completed">✓ VOLTOOID</div>
+      </a>
+      
+      <a href="werk.html" class="day-card completed">
+        <div class="day-number">Dag 3</div>
+        <div class="day-title">💼 WERK</div>
+        <div class="day-description">Arbeidsmarkt, digitalisering, scholing, vakbonden, werkzekerheid</div>
+        <div class="day-topics">
+          <span>Competentie</span>
+          <span>Automatisering</span>
+          <span>Reskilling</span>
+        </div>
+        <div class="badge-completed">✓ VOLTOOID</div>
+      </a>
+      
+      <a href="sport.html" class="day-card completed">
+        <div class="day-number">Dag 4</div>
+        <div class="day-title">🏅 SPORT</div>
+        <div class="day-description">Competitie, gezondheid, talent, ethiek, blessures, inclusiviteit</div>
+        <div class="day-topics">
+          <span>Atletiek</span>
+          <span>Gezondheid</span>
+          <span>Ethiek</span>
+        </div>
+        <div class="badge-completed">✓ VOLTOOID</div>
+      </a>
+      
+      <a href="ia.html" class="day-card completed">
+        <div class="day-number">Dag 5</div>
+        <div class="day-title">🤖 KUNSTMATIGE INTELLIGENTIE</div>
+        <div class="day-description">Machine learning, bias, transparantie, hallucinaties, regelgeving</div>
+        <div class="day-topics">
+          <span>Machine Learning</span>
+          <span>Ethiek</span>
+          <span>AI Act</span>
+        </div>
+        <div class="badge-completed">✓ VOLTOOID</div>
+      </a>
+      
+      <!-- WEEK 2 — IN PROGRESS -->
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 6</div>
+        <div class="day-title">💰 ECONOMIE</div>
+        <div class="day-description">Macro/microeconomie, inflatie, werkloosheid, armoede, handelspolitiek</div>
+        <div class="day-topics">
+          <span>Beginselen</span>
+          <span>Markten</span>
+          <span>Beleid</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 7</div>
+        <div class="day-title">🌍 MIGRATIE</div>
+        <div class="day-description">Migranten, asielzoekers, integratie, discriminatie, beleid</div>
+        <div class="day-topics">
+          <span>Vluchtelingen</span>
+          <span>Integratie</span>
+          <span>Rechten</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 8</div>
+        <div class="day-title">⚖️ JUSTITIE</div>
+        <div class="day-description">Rechtsstaat, misdaad, gevangenissen, hervorming, mensenrechten</div>
+        <div class="day-topics">
+          <span>Recht & Orde</span>
+          <span>Systemen</span>
+          <span>Ethiek</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 9</div>
+        <div class="day-title">🗳️ POLITIEK</div>
+        <div class="day-description">Democratie, verkiezingen, partijen, beleid, publieke debatten</div>
+        <div class="day-topics">
+          <span>Regering</span>
+          <span>Ideologieën</span>
+          <span>Kiezen</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 10</div>
+        <div class="day-title">⚔️ CONFLICTEN</div>
+        <div class="day-description">Oorlog, vredesbouw, diplomatie, terrorisme, internationale relaties</div>
+        <div class="day-topics">
+          <span>Geopolitiek</span>
+          <span>Vredemaking</span>
+          <span>Veiligheid</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 11</div>
+        <div class="day-title">🏥 GEZONDHEID</div>
+        <div class="day-description">Geneesmiddelen, pandemie, mentaal welzijn, gezondheidssystemen</div>
+        <div class="day-topics">
+          <span>Ziekte</span>
+          <span>Preventie</span>
+          <span>Systemen</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 12</div>
+        <div class="day-title">🎭 CULTUUR & MEDIA</div>
+        <div class="day-description">Kunst, literatuur, media, censuur, culturele vooruitgang</div>
+        <div class="day-topics">
+          <span>Kunst</span>
+          <span>Media</span>
+          <span>Vrijheid</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 13</div>
+        <div class="day-title">🔄 REVISIE & VERDIEPING</div>
+        <div class="day-description">Moeilijkste vocabulaire, grammatica, exam-style tests, feedback</div>
+        <div class="day-topics">
+          <span>Review</span>
+          <span>Examen</span>
+          <span>Intensief</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+      
+      <div class="day-card coming-soon">
+        <div class="day-number">Dag 14</div>
+        <div class="day-title">📝 TEST BLANC / EXAMEN SIMULATIE</div>
+        <div class="day-description">Volledig ITNA B2 examen onder examenvoorwaarden (90 minuten)</div>
+        <div class="day-topics">
+          <span>Examen</span>
+          <span>Feedback</span>
+          <span>Voorbereiding</span>
+        </div>
+        <div class="badge-coming">📋 KOMEND</div>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <h2>📅 Volledige Schema</h2>
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th>Dag</th>
+            <th>Thema</th>
+            <th>Focus</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="completed">
+            <td>1</td>
+            <td>KLIMAAT</td>
+            <td>Wetenschap, mitigatie, duurzaamheid</td>
+            <td><span class="tag-completed">✓ DONE</span></td>
+          </tr>
+          <tr class="completed">
+            <td>2</td>
+            <td>ENERGIE</td>
+            <td>Energietransitie, hernieuwbaar, grid</td>
+            <td><span class="tag-completed">✓ DONE</span></td>
+          </tr>
+          <tr class="completed">
+            <td>3</td>
+            <td>WERK</td>
+            <td>Arbeidsmarkt, digitalisering, scholing</td>
+            <td><span class="tag-completed">✓ DONE</span></td>
+          </tr>
+          <tr class="completed">
+            <td>4</td>
+            <td>SPORT</td>
+            <td>Competitie, gezondheid, ethiek</td>
+            <td><span class="tag-completed">✓ DONE</span></td>
+          </tr>
+          <tr class="completed">
+            <td>5</td>
+            <td>KUNSTMATIGE INTELLIGENTIE</td>
+            <td>Machine learning, bias, regelgeving</td>
+            <td><span class="tag-completed">✓ DONE</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>6</td>
+            <td>ECONOMIE</td>
+            <td>Macro/micro, inflatie, armoede</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>7</td>
+            <td>MIGRATIE</td>
+            <td>Vluchtelingen, integratie, beleid</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>8</td>
+            <td>JUSTITIE</td>
+            <td>Rechtsstaat, misdaad, mensenrechten</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>9</td>
+            <td>POLITIEK</td>
+            <td>Democratie, verkiezingen, beleid</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>10</td>
+            <td>CONFLICTEN</td>
+            <td>Oorlog, diplomatie, internationale orde</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>11</td>
+            <td>GEZONDHEID</td>
+            <td>Geneesmiddelen, pandemie, mentaal welzijn</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>12</td>
+            <td>CULTUUR & MEDIA</td>
+            <td>Kunst, literatuur, media, censuur</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>13</td>
+            <td>REVISIE</td>
+            <td>Vocabulaire, grammaire, exam prep</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+          <tr class="coming-soon">
+            <td>14</td>
+            <td>TEST BLANC</td>
+            <td>ITNA B2 examen simulatie (90 min)</td>
+            <td><span class="tag-coming">KOMEND</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="info-section">
+      <h2>💡 Hoe dit programma werkt</h2>
+      <p><strong>Elke dag bevat:</strong></p>
+      <p>
+        ✓ <strong>Introductie</strong> — Context thema (B2/C1)<br>
+        ✓ <strong>Vocabulaire</strong> — 42 woorden (7 categorieën)<br>
+        ✓ <strong>Test</strong> — 20 vragen (FILL/ORDER/INTRUS/QCM)<br>
+        ✓ <strong>Reading</strong> — ~280 woorden + compréhension<br>
+        ✓ <strong>Rédaction</strong> — Vrij schrijven met 3 verplichte woorden<br>
+        ✓ <strong>Feedback</strong> — Score + motivatie
+      </p>
+      <p><strong>Doel:</strong> Nuria bereikt minimaal 56% ITNA B2 (van 51% → 56%+ = +5 punten). Focus op vocabulaire familiariteit, nominalisaties, en B2-specifieke contexten.</p>
+    </div>
+    
+    <div class="footer">
+      <p>🇳🇱 NURIA ITNA B2 Training — 17 augustus → 3 september 2026</p>
+      <p>Hosted via GitHub Pages: pollen1435/nuria-itna-training</p>
+    </div>
+  </div>
+</body>
+</html>
