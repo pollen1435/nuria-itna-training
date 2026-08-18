@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 2: ENERGIE (B2/C1)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 750px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .intro-box { background: #f0f7ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107; }
+    .intro-box h3 { margin-bottom: 1rem; color: #f57f17; font-size: 16px; }
+    .intro-box p { font-size: 14px; line-height: 1.8; margin-bottom: 1rem; text-align: justify; }
+    
+    .vocab-section { margin-bottom: 2rem; }
+    .vocab-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 4px; }
+    .vocab-section.must h4 { background: #ffebee; color: #c62828; }
+    .vocab-section.action h4 { background: #fff3e0; color: #f57f17; }
+    .vocab-section.expr h4 { background: #e8f5e9; color: #2e7d32; }
+    .vocab-section.nice h4 { background: #e3f2fd; color: #1976d2; }
+    .vocab-section.autres h4 { background: #f3e5f5; color: #6a1b9a; }
+    .vocab-section.acronym h4 { background: #fce4ec; color: #c2185b; }
+    .vocab-section.c2 h4 { background: #f3e5f5; color: #7b1fa2; }
+    
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 6px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .fr { font-size: 12px; color: #666; font-style: italic; }
+    .vocab-item .def { font-size: 10px; color: #999; margin-top: 2px; }
+    
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; cursor: pointer; }
+    .option label { cursor: pointer; }
+    
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; min-height: 80px; }
+    
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin-bottom: 0.25rem; }
+    .traduction { color: #666; font-style: italic; font-size: 12px; }
+    
+    .tip-box { background: #fff3cd; border: 1px solid #ffc107; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; color: #856404; font-size: 13px; }
+    
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; font-size: 16px; }
+    .reading p { margin-bottom: 1rem; text-align: justify; font-size: 14px; line-height: 1.8; }
+    
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .comprehension-q strong { display: block; margin-bottom: 0.5rem; font-size: 13px; }
+    .comprehension-q label { display: block; margin: 0.5rem 0; font-size: 13px; }
+    
+    .required-words { background: #e8f5e9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .required-words strong { display: block; margin-bottom: 0.5rem; color: #2e7d32; }
+    .required-words p { font-size: 12px; margin: 0.25rem 0; color: #1976d2; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    
+    .secret-phrase-box { background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); padding: 1rem 1.5rem; border-radius: 8px; margin: 1rem 0; text-align: center; color: #d63031; font-style: italic; font-weight: 500; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #fdcb6e; }
+    
+    .word-item { background: #e3f2fd; padding: 8px 12px; border-radius: 4px; cursor: move; display: inline-block; margin: 4px; }
+    .word-item.placed { background: #4caf50; color: white; }
+    
+    .drop-zone { border: 2px dashed #1976d2; padding: 1rem; border-radius: 6px; margin: 1rem 0; min-height: 80px; background: #f9f9f9; }
+    .drop-zone.drag-over { background: #e3f2fd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="introSection" class="section active">
+      <div class="header">
+        <h1>Dag 2: ENERGIE — Transitie naar Duurzaamheid</h1>
+        <p>18 augustus — Energiecrisis en renewable sources</p>
+      </div>
+      <div id="secretPhrasePos0"></div>
+      <div class="intro-box">
+        <h3>⚡ De mondiale energietransitie</h3>
+        <p>De wereld staat voor een kritieke energietransitie. Fossiele brandstoffen hebben gedomineerd onze economie voor meer dan twee eeuwen, maar hun uitputting en milieuimpact dwingen een paradigmaverschuiving af. Hernieuwbare energiebronnen—zon, wind, waterkracht, biomassa—bieden de mogelijkheid voor een duurzaam energiesysteem. Deze overgang is echter technologisch, economisch en politiek complex.</p>
+        
+        <h3>🔋 Uitdagingen van duurzame energieproductie</h3>
+        <p>Hoewel hernieuwbare energie sneller groeit dan ooit, zijn er aanzienlijke obstakels. Intermitentie (variabiliteit van wind- en zonnestroom), opslagcapaciteit, en gridinfrastructuur vormen technische hindernissen. Daarnaast concurreren fossiele brandstoffen via politieke lobbying en gevestigde investeringen. Toch zal zonder vastbeslotenheid geen dekarbonisering van ons energiesysteem mogelijk zijn.</p>
+        
+        <h3>📊 Nederlands/Belgisch energiebeleid</h3>
+        <p>Nederland en België hebben ambitieuze nuluitstootdoelstellingen vastgesteld voor 2050. Dit vereist massale investeringen in zonnepanelen, windmolens, en elektrificatie van transport. In deze context moet je termen zoals capaciteit, intermitentie, grid-balancing, en energiewisselmarkt begrijpen—complexe begrippen die in huizenhoge mate bepalend zijn voor toekomstige welvaart.</p>
+      </div>
+      <button class="btn btn-primary" onclick="startVocab()">Start dag 2</button>
+    </div>
+
+    <div id="vocabSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Vocabulaire Dag 2: ENERGIE (B2/C1)</h1>
+      <div id="secretPhrasePos1"></div>
+      
+      <div class="vocab-section must">
+        <h4>🔴 MUST HAVE — Kernwoorden (7)</h4>
+        <div class="vocab-grid" id="vocabMust"></div>
+      </div>
+      
+      <div class="vocab-section action">
+        <h4>🟡 WERKWOORDEN — Actie (5)</h4>
+        <div class="vocab-grid" id="vocabAction"></div>
+      </div>
+      
+      <div class="vocab-section expr">
+        <h4>🟢 UITDRUKKINGEN — Collocaties (4)</h4>
+        <div class="vocab-grid" id="vocabExpr"></div>
+      </div>
+      
+      <div class="vocab-section nice">
+        <h4>🔵 NICE TO HAVE — Contexte (5)</h4>
+        <div class="vocab-grid" id="vocabNice"></div>
+      </div>
+      
+      <div class="vocab-section autres">
+        <h4>⚪ ANDERE WOORDEN — Aanvullend (10)</h4>
+        <div class="vocab-grid" id="vocabAutres"></div>
+      </div>
+      
+      <div class="vocab-section acronym">
+        <h4>🟠 ACRONYMES — Afkortingen (5)</h4>
+        <div class="vocab-grid" id="vocabAcronyms"></div>
+      </div>
+      
+      <div class="vocab-section c2">
+        <h4>🔶 C2 LEXIQUE AVANCÉ — Zeer moeilijk (6)</h4>
+        <div class="vocab-grid" id="vocabC2"></div>
+      </div>
+      
+      <div id="secretPhrasePos2"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (20 vragen B2/C1)</button>
+    </div>
+
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/20</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="feedbackArea"></div>
+        <div id="tipArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <div id="secretPhrasePos3"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 2</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/20</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <div id="secretPhrasePos4"></div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+      <div id="secretPhrasePos5"></div>
+    </div>
+  </div>
+
+  <script>
+    const vocabMust = [
+      { nl: 'energie / energieverbruik / energievoorziening', fr: 'Énergie / Consommation énergétique / Approvisionnement' },
+      { nl: 'hernieuwbare energie / hernieuwbare bron / duurzaam', fr: 'Énergie renouvelable / Source renouvelable / Durable' },
+      { nl: 'fossiele brandstof / aardgas / kolen / olie', fr: 'Combustible fossile / Gaz naturel / Charbon / Pétrole' },
+      { nl: 'elektriciteit / stroom / stroomnet / netwerk', fr: 'Électricité / Courant / Réseau électrique' },
+      { nl: 'capaciteit / vermogen / output / opbrengst', fr: 'Capacité / Puissance / Rendement' },
+      { nl: 'opslagcapaciteit / batterij / accu / reservoir', fr: 'Capacité de stockage / Batterie / Réservoir' },
+      { nl: 'intermitentie / variabiliteit / onzekerheid', fr: 'Intermittence / Variabilité / Incertitude' }
+    ];
+
+    const vocabAction = [
+      { nl: 'produceren / genereren / opwekken / uitgeven', fr: 'Produire / Générer / Fournir' },
+      { nl: 'opslaan / stockeren / reserveren / bufferen', fr: 'Stocker / Réserver / Tamponner' },
+      { nl: 'gebruiken / verbruiken / consumeren / inzetten', fr: 'Utiliser / Consommer' },
+      { nl: 'transitie / overgaan / verschuiven / omschakelen', fr: 'Transiter / Passer à / Basculer' },
+      { nl: 'besparen / verminderen / efficiënter maken / optimaliseren', fr: 'Économiser / Réduire / Optimiser' }
+    ];
+
+    const vocabExpr = [
+      { nl: 'energietransitie naar hernieuwbare bronnen', fr: 'Transition énergétique vers les sources renouvelables' },
+      { nl: 'fossiele brandstoffen vervangen / uitfaseren', fr: 'Remplacer les combustibles fossiles / Éliminer progressivement' },
+      { nl: 'stroomnetwerk versterken / uitbreiden / moderniseren', fr: 'Renforcer le réseau électrique' },
+      { nl: 'energiebehoefte / -vraag / -verzwaring / -transitie', fr: 'Besoin énergétique / Demande / Transition' }
+    ];
+
+    const vocabNice = [
+      { nl: 'zonnepaneel / zonne-energie / photovoltaïsch', fr: 'Panneau solaire / Énergie solaire' },
+      { nl: 'windmotor / windmolen / windkracht / windenergie', fr: 'Éolienne / Énergie éolienne' },
+      { nl: 'waterkracht / hydroëlektrisch / watervallen', fr: 'Puissance hydroélectrique / Énergie hydraulique' },
+      { nl: 'biomassa / biobrandstof / organisch afval', fr: 'Biomasse / Biocarburant' },
+      { nl: 'kernenergie / nucleair / atoomkracht', fr: 'Énergie nucléaire' }
+    ];
+
+    const vocabAutres = [
+      { nl: 'dekarbonisering / koolstofneutraal / emissieloos', fr: 'Décarbonisation / Neutre en carbone / Sans émissions' },
+      { nl: 'smartgrid / intelligente meter / netwerktechnologie', fr: 'Réseau intelligent / Technologie de réseau' },
+      { nl: 'gridbalans / lastspreiden / vraagbeheer / load balancing', fr: 'Équilibre du réseau / Gestion de la demande' },
+      { nl: 'effiëntie / rendement / energieverlies / wattage', fr: 'Efficacité / Rendement / Perte énergétique' },
+      { nl: 'investering / kapitaal / fondsen / subsidie', fr: 'Investissement / Capital / Subvention' },
+      { nl: 'hindernissen / obstakels / barrières / belemmeringen', fr: 'Obstacles / Barrières' },
+      { nl: 'lobbying / politieke druk / belangengroep', fr: 'Lobbying / Pression politique' },
+      { nl: 'paradigmaverschuiving / gedachtewisseling / paradigmashift', fr: 'Changement de paradigme / Shift' },
+      { nl: 'duurzaamheid / houdbaarheid / toekomstgerichtheid', fr: 'Durabilité / Viabilité' },
+      { nl: 'uitputting / schaarste / begrensdheid / limitering', fr: 'Épuisement / Rareté / Limitation' }
+    ];
+
+    const vocabAcronyms = [
+      { nl: 'kWh', def: 'Kilowattuur (energie-eenheid)', fr: 'Kilowattheure' },
+      { nl: 'MW / GW', def: 'Megawatt / Gigawatt (vermogen)', fr: 'Mégawatt / Gigawatt' },
+      { nl: 'FIT', def: 'Feed-in Tariff (subsidiering)', fr: 'Tarif de rachat' },
+      { nl: 'EV', def: 'Electric Vehicle', fr: 'Véhicule électrique' },
+      { nl: 'IRENA', def: 'Internationale Renewable Energy Agency', fr: 'Agence internationale pour les énergies renouvelables' }
+    ];
+
+    const vocabC2 = [
+      { nl: 'intermittentieproblematiek / variabiliteitsuitdaging / volatiliteit', fr: 'Problématique d\'intermittence / Volatilité' },
+      { nl: 'grid-balancing / frequentieregelaar / sekondaire regelreserve', fr: 'Équilibrage du réseau / Réserve secondaire' },
+      { nl: 'dispatchable power / flexible generation / demand-side management', fr: 'Puissance pilotable / Gestion côté demande' },
+      { nl: 'levelized cost of energy (LCOE) / aanschafkosten / bedrijfskosten', fr: 'Coût actualisé de l\'énergie (CAUE)' },
+      { nl: 'decentralisatie / prosumenten / peer-to-peer energiewisseling', fr: 'Décentralisation / Prosommateurs / Échange pair-à-pair' },
+      { nl: 'energietransitiezekerheid / locked-in carbon / stranded assets', fr: 'Certitude de transition / Actifs échoués' }
+    ];
+
+    // 20 QUESTIONS — MIX
+    const questionsRaw = [
+      // FILL
+      { type: 'fill', text: 'De mondiale energietransitie vereist massale __________ in zonne- en windenergie.', ans: 'investeringen', tip: 'Investeren → investeringen', fr: 'Investissements' },
+      { type: 'fill', text: 'Hernieuwbare energiebronnen kunnen alleen zonder __________ concurreren als oude infrastructuur wordt afgebouwd.', ans: 'lobbying', tip: 'Politieke druk door fossiellobby', fr: 'Lobbying' },
+      { type: 'fill', text: 'De __________ van wind- en zonnestroom vormt een grote technische uitdaging.', ans: 'intermitentie', tip: 'Variabiliteit en onzekerheid', fr: 'Intermittence' },
+      { type: 'fill', text: 'Batterijcapaciteit op schaal kan energieopslag __________ maar is nog kostbaar.', ans: 'verbeteren', tip: 'Verbeteren = make better', fr: 'Améliorer' },
+      { type: 'fill', text: 'Fossiele brandstoffen zullen __________ moeten worden door schone alternatieven.', ans: 'vervangen', tip: 'Vervangen = replace/substitute', fr: 'Remplacer' },
+      { type: 'fill', text: 'De __________ naar duurzame energie is technologisch en politiek complex.', ans: 'transitie', tip: 'Overgang/shift', fr: 'Transition' },
+      { type: 'fill', text: 'Smartgrids kunnen energievraag beter __________ en vastbergingsmogelijkheden optimaliseren.', ans: 'verdelen', tip: 'Verdelen = distribute', fr: 'Distribuer' },
+      { type: 'fill', text: 'Nucleaire energie wordt door sommigen gezien als __________ oplossing zonder CO2.', ans: 'essentieel', tip: 'Essentieel = essential/crucial', fr: 'Essentiel' },
+      { type: 'fill', text: 'De __________ van aardolie wordt geschat op enkele decennia.', ans: 'uitputting', tip: 'Exhaustion = depletion', fr: 'Épuisement' },
+      { type: 'fill', text: 'Energieefficiëntie kan veel __________ voorkomen voordat investeringen nodig zijn.', ans: 'verbruik', tip: 'Consumption/usage', fr: 'Consommation' },
+      { type: 'fill', text: 'Zonder grid-balancing zal intermitentie onmogelijk __________ kunnen worden.', ans: 'opgelost', tip: 'Passif: oplossen → opgelost', fr: 'Être résolu' },
+      { type: 'fill', text: 'De __________ van het energiesysteem zal de toekomst bepalen.', ans: 'dekarbonisering', tip: 'Décarbonisation / removal carbon', fr: 'Décarbonisation' },
+      
+      // ORDER
+      { type: 'order', text: 'Zet in juiste volgorde (PASSIEF COMPLEX):', words: ['Hoewel', 'hernieuwbare', 'energie', 'snel', 'groeit,', 'kunnen', 'fossiele', 'brandstoffen', 'niet', 'zonder', 'vastbeslotenheid', 'vervangen', 'worden'], correct: 'Hoewel hernieuwbare energie snel groeit, kunnen fossiele brandstoffen niet zonder vastbeslotenheid vervangen worden', fr: 'Bien que l\'énergie renouvelable croît' },
+      { type: 'order', text: 'Zet in juiste volgorde (INFINITIEF PASSIEF):', words: ['Stroomnetwerken', 'moeten', 'versterkt', 'en', 'uitgebreid', 'worden', 'om', 'intermitentie', 'aan', 'te', 'kunnen'], correct: 'Stroomnetwerken moeten versterkt en uitgebreid worden om intermitentie aan te kunnen', fr: 'Les réseaux doivent être renforcés' },
+      
+      // INTRUS
+      { type: 'intrus', text: 'Welk woord past NIET semantisch? zonnepaneel — windmotor — waterkracht — aardgas', opts: ['zonnepaneel', 'windmotor', 'waterkracht', 'aardgas'], ans: 'aardgas', fr: 'Aardgas = fossiel, anderen = hernieuwbaar' },
+      { type: 'intrus', text: 'Welk woord past NIET thematisch? opslaan — bufferen — stockeren — verbruiken', opts: ['opslaan', 'bufferen', 'stockeren', 'verbruiken'], ans: 'verbruiken', fr: 'Verbruiken = consumption, anderen = storage' },
+      { type: 'intrus', text: 'Welk woord past NIET? capaciteit — intermitentie — variabiliteit — onzekerheid', opts: ['capaciteit', 'intermitentie', 'variabiliteit', 'onzekerheid'], ans: 'capaciteit', fr: 'Capaciteit = production ability, anderen = instability' },
+      { type: 'intrus', text: 'Welk woord past NIET? smartgrid — batterij — zonnepaneel — lobbying', opts: ['smartgrid', 'batterij', 'zonnepaneel', 'lobbying'], ans: 'lobbying', fr: 'Lobbying = obstacle politiek, anderen = technologie/infrastructure' },
+      
+      // QCM
+      { type: 'qcm', text: 'Wat is het belangrikste obstakel voor energietransitie?', opts: ['Technisch: intermitentie en opslagcapaciteit', 'Politiek: fossielobby en gevestigde investeringen', 'Beide technisch en politiek'], ans: 'Beide technisch en politiek', fr: 'Obstacles à la fois technique et politique' },
+      { type: 'qcm', text: 'Wat vereist grid-balancing primair?', opts: ['Het vervangen van alle oude turbines', 'Het verdelen van energie-aanbod en vraag in real-time', 'Het verminderen van alle hernieuwbare bronnen'], ans: 'Het verdelen van energie-aanbod en vraag in real-time', fr: 'Distribuer l\'offre et la demande' }
+    ];
+
+    const questions = questionsRaw.sort(() => Math.random() - 0.5);
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderVocab(data, elementId) {
+      const html = data.map(v => {
+        if (v.def) {
+          return `<div class="vocab-item"><div><div class="nl">${v.nl}</div><div style="font-size: 10px; color: #999; margin-top: 3px;">${v.def}</div></div><div class="fr">${v.fr}</div></div>`;
+        } else {
+          return `<div class="vocab-item"><div class="nl">${v.nl}</div><div class="fr">${v.fr}</div></div>`;
+        }
+      }).join('');
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    function renderAllVocab() {
+      renderVocab(vocabMust, 'vocabMust');
+      renderVocab(vocabAction, 'vocabAction');
+      renderVocab(vocabExpr, 'vocabExpr');
+      renderVocab(vocabNice, 'vocabNice');
+      renderVocab(vocabAutres, 'vocabAutres');
+      renderVocab(vocabAcronyms, 'vocabAcronyms');
+      renderVocab(vocabC2, 'vocabC2');
+    }
+
+    function startVocab() {
+      document.getElementById('introSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderAllVocab();
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `<div class="option"><input type="radio" name="ans" value="${o}" id="opt${i}"><label for="opt${i}">${o}</label></div>`).join('');
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div><input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div><div class="drop-zone" id="dropZone">Sleep woorden hier</div><div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<span class="word-item" draggable="true" id="word${i}">${w}</span>`;
+        });
+        content += `</div><button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      
+      if (q.type === 'order') {
+        setupDragDrop();
+      }
+      
+      document.getElementById('nextBtn').disabled = true;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    let draggedElement = null;
+
+    function setupDragDrop() {
+      const zone = document.getElementById('dropZone');
+      
+      document.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('word-item')) {
+          draggedElement = e.target;
+          e.dataTransfer.effectAllowed = 'move';
+          e.target.style.opacity = '0.5';
+        }
+      });
+
+      document.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('word-item')) {
+          e.target.style.opacity = '1';
+          draggedElement = null;
+        }
+      });
+
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', (e) => {
+        if (e.target === zone) {
+          zone.classList.remove('drag-over');
+        }
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (draggedElement && draggedElement.parentNode !== zone) {
+          draggedElement.classList.add('placed');
+          zone.appendChild(draggedElement);
+        }
+      });
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let answer = '';
+      let isCorrect = false;
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answer = selected.value;
+        isCorrect = answer === q.ans;
+      } else if (q.type === 'fill') {
+        answer = document.getElementById('fillInput').value.trim();
+        isCorrect = answer.toLowerCase() === q.ans.toLowerCase();
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item')).map(w => w.textContent).join(' ');
+        answer = placed || '';
+        isCorrect = answer === q.correct;
+      }
+
+      if (isCorrect) score++;
+
+      const feedback = `<div class="feedback ${isCorrect ? 'correct' : 'incorrect'}"><div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div><div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div><div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div></div>`;
+      document.getElementById('feedbackArea').innerHTML = feedback;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function skipQuestion() {
+      nextQ();
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Energietransitie: Hoop en Realiteit</h3>
+        <p>De overgang van fossiele naar hernieuwbare energie is technisch haalbaar maar politiek ingewikkeld. Zonnepanelen en windmolens worden exponentieel goedkoper en efficiënter. Toch groeit fossiel energieverbruik nog steeds doordat lobby's politieke wil ondermijnen. Zonder vastbeslotenheid zal de energietransitie niet op tijd voltooid worden.</p>
+        
+        <p>Grid-balancing en batterijopslag zijn essentieel voor intermitentie-problemen. Smartgrids kunnen energie intelligenter verdelen. Maar investeringen in infrastructuur zijn massaal. Nederland streeft naar 100% hernieuwbare energie in 2050. Dit vereist niet alleen technologie maar ook politische vasthoudendheid en maatschappelijke steun.</p>
+        
+        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Waarom groeit fossiel energieverbruik nog?</strong><br>
+            <input type="radio" name="comp1" value="a"> Omdat hernieuwbare energie te duur is<br>
+            <input type="radio" name="comp1" value="b"> Omdat lobby's politieke wil ondermijnen<br>
+            <input type="radio" name="comp1" value="c"> Omdat technologie niet beschikbaar is
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Wat zijn essentiële technologieën voor transitie?</strong><br>
+            <input type="radio" name="comp2" value="a"> Alleen zonnepanelen<br>
+            <input type="radio" name="comp2" value="b"> Alleen windmolens<br>
+            <input type="radio" name="comp2" value="c"> Grid-balancing, batterijopslag en smartgrids
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Wat bepaalt succes van energietransitie?</strong><br>
+            <input type="radio" name="comp3" value="a"> Alleen technologie<br>
+            <input type="radio" name="comp3" value="b"> Alleen politieke wil<br>
+            <input type="radio" name="comp3" value="c"> Technologie, politieke wil en maatschappelijke steun
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3-5 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• capaciteit</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• intermitentie</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• investering</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasCapaciteit = opinion.toLowerCase().includes('capaciteit');
+      const hasIntermitentie = opinion.toLowerCase().includes('intermitentie');
+      const hasInvestering = opinion.toLowerCase().includes('investering');
+      
+      const wordCheck = `<div style="background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+        <strong>Vereiste woorden:</strong><br>
+        <span style="color: ${hasCapaciteit ? '#4caf50' : '#f44336'};">• capaciteit: ${hasCapaciteit ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasIntermitentie ? '#4caf50' : '#f44336'};">• intermitentie: ${hasIntermitentie ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasInvestering ? '#4caf50' : '#f44336'};">• investering: ${hasInvestering ? '✓' : '✗'}</span>
+      </div>`;
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/20 (' + percent + '%)';
+      
+      let msg = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 3.';
+        document.getElementById('resultsBox').className = 'results excellent';
+      } else if (percent >= 56) {
+        msg = '→ Goed! Maar herhaal moeilijke vragen.';
+        document.getElementById('resultsBox').className = 'results good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        document.getElementById('resultsBox').className = 'results weak';
+      }
+      document.getElementById('scoreMsg').textContent = msg + wordCheck;
+    }
+
+    function restart() {
+      location.reload();
+    }
+
+    const secretPhrases = [
+      "On est fier de toi. 💙",
+      "On t'aime très fort. 💛",
+      "Tu es fantastique! ✨",
+      "Tu vas y arriver! 🚀",
+      "Prends soin de toi. 🌸",
+      "Repose toi quand tu en as besoin. 💤",
+      "Aujourd'hui, fais toi plaisir. 🎉",
+      "Dors un peu quand tu es fatiguée. 🌙"
+    ];
+
+    function getRandomPhrase() {
+      const today = new Date().toISOString().split('T')[0];
+      const lastDate = localStorage.getItem('lastSecretPhraseDate');
+      const lastPhrase = localStorage.getItem('lastSecretPhrase');
+
+      if (lastDate !== today) {
+        let newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+        if (lastPhrase) {
+          while (newPhrase === lastPhrase) {
+            newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+          }
+        }
+        localStorage.setItem('lastSecretPhraseDate', today);
+        localStorage.setItem('lastSecretPhrase', newPhrase);
+        return newPhrase;
+      }
+      return lastPhrase || secretPhrases[0];
+    }
+
+    function getRandomPosition() {
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function displaySecretPhrase() {
+      const phrase = getRandomPhrase();
+      const position = getRandomPosition();
+      const boxId = 'secretPhrasePos' + position;
+      const box = document.getElementById(boxId);
+      if (box) {
+        box.innerHTML = '<div class="secret-phrase-box">' + phrase + '</div>';
+      }
+    }
+
+    displaySecretPhrase();
+  </script>
+</body>
+</html>

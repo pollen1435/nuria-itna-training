@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NURIA ITNA B2 - Dag 3: WERK (B2/C1)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; line-height: 1.6; }
+    .container { max-width: 750px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+    .header p { font-size: 13px; color: #666; }
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    .intro-box { background: #f0f7ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107; }
+    .intro-box h3 { margin-bottom: 1rem; color: #f57f17; font-size: 16px; }
+    .intro-box p { font-size: 14px; line-height: 1.8; margin-bottom: 1rem; text-align: justify; }
+    
+    .vocab-section { margin-bottom: 2rem; }
+    .vocab-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; padding: 0.5rem; border-radius: 4px; }
+    .vocab-section.must h4 { background: #ffebee; color: #c62828; }
+    .vocab-section.action h4 { background: #fff3e0; color: #f57f17; }
+    .vocab-section.expr h4 { background: #e8f5e9; color: #2e7d32; }
+    .vocab-section.nice h4 { background: #e3f2fd; color: #1976d2; }
+    .vocab-section.autres h4 { background: #f3e5f5; color: #6a1b9a; }
+    .vocab-section.acronym h4 { background: #fce4ec; color: #c2185b; }
+    .vocab-section.c2 h4 { background: #f3e5f5; color: #7b1fa2; }
+    
+    .vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .vocab-item { background: white; border: 0.5px solid #ddd; border-radius: 6px; padding: 0.75rem; }
+    .vocab-item .nl { font-weight: 500; font-size: 13px; }
+    .vocab-item .fr { font-size: 12px; color: #666; font-style: italic; }
+    .vocab-item .def { font-size: 10px; color: #999; margin-top: 2px; }
+    
+    .btn { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; }
+    .btn-primary { background: #1976d2; color: white; width: 100%; margin-top: 0.5rem; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-secondary { background: #f0f0f0; color: #333; border: 0.5px solid #ddd; flex: 1; }
+    .btn-secondary:hover { background: #e8e8e8; }
+    .btn-tip { background: #fff3cd; color: #856404; padding: 6px 12px; font-size: 12px; margin-top: 0.5rem; border-radius: 4px; border: 1px solid #ffc107; cursor: pointer; }
+    .btn-group { display: flex; gap: 8px; margin-top: 1rem; }
+    
+    .question-card { background: white; padding: 1.5rem; border-radius: 8px; }
+    .progress { font-size: 12px; color: #666; margin-bottom: 1rem; }
+    .question-type { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 11px; margin-bottom: 1rem; }
+    .question-text { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin: 1rem 0; font-size: 14px; line-height: 1.8; }
+    
+    .option { margin: 0.75rem 0; }
+    .option input { margin-right: 8px; cursor: pointer; }
+    .option label { cursor: pointer; }
+    
+    .input-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; }
+    .textarea-field { width: 100%; padding: 8px; border: 0.5px solid #ddd; border-radius: 6px; margin: 1rem 0; font-size: 14px; min-height: 80px; }
+    
+    .feedback { margin-top: 1rem; padding: 1rem; border-radius: 6px; }
+    .feedback.correct { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
+    .feedback.incorrect { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
+    .feedback-title { font-weight: 600; margin-bottom: 0.5rem; }
+    .feedback-text { font-size: 13px; margin-bottom: 0.25rem; }
+    .traduction { color: #666; font-style: italic; font-size: 12px; }
+    
+    .tip-box { background: #fff3cd; border: 1px solid #ffc107; padding: 0.75rem; border-radius: 6px; margin-top: 0.75rem; color: #856404; font-size: 13px; }
+    
+    .reading { background: white; padding: 1.5rem; border-radius: 8px; }
+    .reading h3 { margin-bottom: 1rem; font-size: 16px; }
+    .reading p { margin-bottom: 1rem; text-align: justify; font-size: 14px; line-height: 1.8; }
+    
+    .comprehension { background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .comprehension-q { margin-bottom: 1rem; }
+    .comprehension-q strong { display: block; margin-bottom: 0.5rem; font-size: 13px; }
+    .comprehension-q label { display: block; margin: 0.5rem 0; font-size: 13px; }
+    
+    .required-words { background: #e8f5e9; padding: 1rem; border-radius: 6px; margin-top: 1rem; }
+    .required-words strong { display: block; margin-bottom: 0.5rem; color: #2e7d32; }
+    .required-words p { font-size: 12px; margin: 0.25rem 0; color: #1976d2; }
+    
+    .results { background: white; padding: 1.5rem; border-radius: 8px; text-align: center; }
+    .results.excellent { background: #e8f5e9; color: #2e7d32; }
+    .results.good { background: #fff3e0; color: #f57f17; }
+    .results.weak { background: #ffebee; color: #c62828; }
+    .score { font-size: 36px; font-weight: 500; margin: 1rem 0; }
+    
+    .secret-phrase-box { background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); padding: 1rem 1.5rem; border-radius: 8px; margin: 1rem 0; text-align: center; color: #d63031; font-style: italic; font-weight: 500; font-size: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #fdcb6e; }
+    
+    .word-item { background: #e3f2fd; padding: 8px 12px; border-radius: 4px; cursor: move; display: inline-block; margin: 4px; }
+    .word-item.placed { background: #4caf50; color: white; }
+    
+    .drop-zone { border: 2px dashed #1976d2; padding: 1rem; border-radius: 6px; margin: 1rem 0; min-height: 80px; background: #f9f9f9; }
+    .drop-zone.drag-over { background: #e3f2fd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="introSection" class="section active">
+      <div class="header">
+        <h1>Dag 3: WERK — Arbeidsmarkt & Competenties</h1>
+        <p>19 augustus — Werkgelegenheid, sectoren, vakbonden</p>
+      </div>
+      <div id="secretPhrasePos0"></div>
+      <div class="intro-box">
+        <h3>💼 De evolutie van werk</h3>
+        <p>Het arbeidsverhaal van de 21ste eeuw is complex. Digitalisering vervangt routinetaken, maar creëert ook nieuwe sectoren. Tegenwoordig vereisen veel functies zogenaamde "soft skills" en permanente scholing. Gelijktijdig groeien vragen over werkzekerheid, flexibiliteit, en de balans tussen werkgever en werknemer.</p>
+        
+        <h3>📊 Sector-transformatie en vakbonden</h3>
+        <p>Traditionele industrieën zoals textiel en staalproductie zijn verzwakt in Europa. Daarentegen floreren de tech-, gezondheidszorg-, en groene sectoren. Vakbonden pleiten voor werknemersbescherming tegen automatisering, maar onderhandelen ook over transitieregelingen. Dit debat bepaalt arbeidsvoorwaarden en sociale ongelijkheid.</p>
+        
+        <h3>🎓 Competenties en loopbaanplanning</h3>
+        <p>Werkgevers zoeken niet alleen kennis maar ook creativiteit, samenwerking, en probleemoplossing. Scholing en reskilling zijn geen keuze meer maar noodzaak. Nederlandse/Belgische arbeidsmarkt eist Nederlands B2/C1 voor veel middelfuncties—vandaar dit training programma.</p>
+      </div>
+      <button class="btn btn-primary" onclick="startVocab()">Start dag 3</button>
+    </div>
+
+    <div id="vocabSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Vocabulaire Dag 3: WERK (B2/C1)</h1>
+      <div id="secretPhrasePos1"></div>
+      
+      <div class="vocab-section must">
+        <h4>🔴 MUST HAVE — Kernwoorden (7)</h4>
+        <div class="vocab-grid" id="vocabMust"></div>
+      </div>
+      
+      <div class="vocab-section action">
+        <h4>🟡 WERKWOORDEN — Actie (5)</h4>
+        <div class="vocab-grid" id="vocabAction"></div>
+      </div>
+      
+      <div class="vocab-section expr">
+        <h4>🟢 UITDRUKKINGEN — Collocaties (4)</h4>
+        <div class="vocab-grid" id="vocabExpr"></div>
+      </div>
+      
+      <div class="vocab-section nice">
+        <h4>🔵 NICE TO HAVE — Contexte (5)</h4>
+        <div class="vocab-grid" id="vocabNice"></div>
+      </div>
+      
+      <div class="vocab-section autres">
+        <h4>⚪ ANDERE WOORDEN — Aanvullend (10)</h4>
+        <div class="vocab-grid" id="vocabAutres"></div>
+      </div>
+      
+      <div class="vocab-section acronym">
+        <h4>🟠 ACRONYMES — Afkortingen (5)</h4>
+        <div class="vocab-grid" id="vocabAcronyms"></div>
+      </div>
+      
+      <div class="vocab-section c2">
+        <h4>🔶 C2 LEXIQUE AVANCÉ — Zeer moeilijk (6)</h4>
+        <div class="vocab-grid" id="vocabC2"></div>
+      </div>
+      
+      <div id="secretPhrasePos2"></div>
+      <button class="btn btn-primary" onclick="gotoTest()">Start de test (20 vragen B2/C1)</button>
+    </div>
+
+    <div id="testSection" class="section">
+      <div class="progress">Vraag <span id="qNum">1</span>/20</div>
+      <div class="question-card">
+        <div id="questionType" class="question-type"></div>
+        <div id="questionContent"></div>
+        <div id="feedbackArea"></div>
+        <div id="tipArea"></div>
+        <div class="btn-group">
+          <button class="btn btn-secondary" onclick="prevQ()">Vorige</button>
+          <button class="btn btn-secondary" onclick="skipQuestion()" style="background: #ffb74d; color: #fff;">Passer</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">Volgende</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="readingSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Tekst om te lezen</h1>
+      <div class="reading" id="readingContent"></div>
+      <div id="secretPhrasePos3"></div>
+      <button class="btn btn-primary" style="margin-top: 1rem;" onclick="gotoResults()">Ga naar resultaten</button>
+    </div>
+
+    <div id="resultsSection" class="section">
+      <h1 style="margin-bottom: 1rem;">Resultaten Dag 3</h1>
+      <div class="results" id="resultsBox">
+        <div class="score" id="scoreNum">0/20</div>
+        <div id="scoreMsg"></div>
+      </div>
+      <div id="secretPhrasePos4"></div>
+      <button class="btn btn-primary" onclick="restart()">Opnieuw beginnen</button>
+      <div id="secretPhrasePos5"></div>
+    </div>
+  </div>
+
+  <script>
+    const vocabMust = [
+      { nl: 'werk / werkgelegenheid / tewerkstelling / functies', fr: 'Travail / Emploi / Postes' },
+      { nl: 'werknemer / personeelslid / medewerker / bediende', fr: 'Employé / Collaborateur' },
+      { nl: 'werkgever / patroon / bedrijf / onderneming', fr: 'Employeur / Entreprise' },
+      { nl: 'competentie / vaardigheid / bekwaamheid / kundigheid', fr: 'Compétence / Compétence / Aptitude' },
+      { nl: 'scholing / opleiding / training / cursus', fr: 'Formation / Enseignement' },
+      { nl: 'vakbond / vakorganisatie / werknemersorganisatie', fr: 'Syndicat / Organisation de travailleurs' },
+      { nl: 'arbeidsvoorwaarden / contract / overeenkomst / loon', fr: 'Conditions de travail / Contrat / Salaire' }
+    ];
+
+    const vocabAction = [
+      { nl: 'werkzaam zijn / werken / beroepsmatig actief zijn', fr: 'Travailler / Être employé' },
+      { nl: 'aannemen / in dienst nemen / werven / inschakelen', fr: 'Engager / Recruter' },
+      { nl: 'ontslaan / beëindigen / royeren / het contract ontbinden', fr: 'Licencier / Résilier' },
+      { nl: 'scholing volgen / trainen / leren / zich bijscholen', fr: 'Se former / S\'entraîner / Suivre une formation' },
+      { nl: 'onderhandelen / in overleg gaan / bedingen / afspraken maken', fr: 'Négocier / Discuter / Convenir' }
+    ];
+
+    const vocabExpr = [
+      { nl: 'werkgelegenheid creëren / banen scheppen / beroepen genereren', fr: 'Créer de l\'emploi' },
+      { nl: 'flexibel werk / gig economy / freelance activiteiten', fr: 'Travail flexible / Économie des petits boulots' },
+      { nl: 'arbeidsmarkt transformatie / sector-evolutie / digitalisering', fr: 'Transformation du marché du travail' },
+      { nl: 'werkzekerheid / job security / contract-stabiliteit', fr: 'Sécurité de l\'emploi' }
+    ];
+
+    const vocabNice = [
+      { nl: 'carrièreplanning / loopbaanadvies / professioneel pad', fr: 'Planification de carrière / Parcours professionnel' },
+      { nl: 'soft skills / interpersoonlijke vaardigheden / menselijk contact', fr: 'Compétences relationnelles / Contact humain' },
+      { nl: 'automatisering / robotisering / AI implementatie / vervanging', fr: 'Automatisation / Robotisation' },
+      { nl: 'reskilling / omscholing / transitie naar nieuwe sector', fr: 'Reconversion / Transition professionnelle' },
+      { nl: 'werkloosheid / werklozen / jobless rate / werkloosheidsgraad', fr: 'Chômage / Taux de chômage' }
+    ];
+
+    const vocabAutres = [
+      { nl: 'industrie / sectoren / branches / economische takken', fr: 'Industrie / Secteurs / Domaines' },
+      { nl: 'digitalisering / digitale transformatie / ondernemen online', fr: 'Numérisation / Transformation numérique' },
+      { nl: 'tech-sector / technologiebedrijven / startups / innovatie', fr: 'Secteur technologique / Startups' },
+      { nl: 'gezondheidszorg / medische sector / ziekenhuis / klinieken', fr: 'Secteur de la santé / Soins' },
+      { nl: 'groene sector / hernieuwbare energie / sustainability banen', fr: 'Secteur vert / Emplois durables' },
+      { nl: 'sociaal beleid / werknemersbescherming / recht op werk', fr: 'Politique sociale / Protection des travailleurs' },
+      { nl: 'onderhandeling / collectief contract / cao / arbeidsovereenkomst', fr: 'Négociation / Convention collective' },
+      { nl: 'flexibiliteit / aanpasbaarheid / adaptieve capaciteit', fr: 'Flexibilité / Capacité d\'adaptation' },
+      { nl: 'loonkosten / salarisverhogingen / voordelen / benefits package', fr: 'Coûts salariaux / Augmentations salariales / Avantages' },
+      { nl: 'tewerkstelling / beschäftigung / jobcreation / werkgelegenheid', fr: 'Emploi / Création d\'emplois' }
+    ];
+
+    const vocabAcronyms = [
+      { nl: 'HR', def: 'Human Resources (personeelszaken)', fr: 'Ressources Humaines' },
+      { nl: 'CVS', def: 'Curriculum Vitae + Sollicitatiebrief', fr: 'CV' },
+      { nl: 'CEO', def: 'Chief Executive Officer (directeur)', fr: 'Directeur général' },
+      { nl: 'API', def: 'Aangever Persoonsgegevens Instellingen', fr: 'Organisme de formation agréé' },
+      { nl: 'FTE', def: 'Full-Time Equivalent (voltijdse baan)', fr: 'Équivalent temps plein' }
+    ];
+
+    const vocabC2 = [
+      { nl: 'paradigmashift in arbeidsrelaties / relaties transformeren', fr: 'Changement de paradigme dans les relations de travail' },
+      { nl: 'precaire arbeid / precarisering / onzekerheid werk', fr: 'Travail précaire / Précarisation' },
+      { nl: 'labor market duality / segmentatie / dual track employment', fr: 'Dualité du marché du travail' },
+      { nl: 'human capital / cultureel vermogen / sociaal kapitaal', fr: 'Capital humain / Capital social' },
+      { nl: 'asymmetrische informatie / principal-agent probleem', fr: 'Information asymétrique / Problème principal-agent' },
+      { nl: 'intersectorale mobiliteit / cross-functional skills / polyvalentie', fr: 'Mobilité intersectorielle / Polyvalence' }
+    ];
+
+    // 20 QUESTIONS — MIX
+    const questionsRaw = [
+      // FILL
+      { type: 'fill', text: 'Moderne arbeidsmarkten eisen niet alleen technisch kennis maar ook __________ vaardigheden.', ans: 'soft', tip: 'Soft skills = interpersoonlijk', fr: 'Compétences relationnelles' },
+      { type: 'fill', text: 'Vakbonden __________ tegen arbeidsrechtvernieuwingen die werknemersbescherming beperken.', ans: 'betogen', tip: 'Betogen = protestation/resistance', fr: 'Protestent' },
+      { type: 'fill', text: 'Digitalisering __________ routinetaken maar creëert ook nieuwe beroepscategorieën.', ans: 'vervangt', tip: 'Remplacer/substitute', fr: 'Remplace' },
+      { type: 'fill', text: 'De __________ van scholingsprogramma\'s is essentieel voor competitiviteit.', ans: 'kwaliteit', tip: 'Quality = kwaliteit', fr: 'Qualité' },
+      { type: 'fill', text: 'Tech-bedrijven hebben veel moeilijkheden __________ gespecialiseerde werknemers te vinden.', ans: 'om', tip: 'Hebben moeilijkheden om = have difficulty to', fr: 'À trouver' },
+      { type: 'fill', text: 'Flexibele arbeidscontracten zijn __________ maar ook onzekerder voor werknemers.', ans: 'adaptief', tip: 'Adaptief = adaptive/flexible', fr: 'Adaptatifs' },
+      { type: 'fill', text: 'Werkloosheid kan __________ worden door gerichtere scholingsprogramma\'s.', ans: 'verminderd', tip: 'Passif: verminderen → verminderd', fr: 'Être réduite' },
+      { type: 'fill', text: 'De __________ van arbeidsvisumvereisten varieert sterk per land.', ans: 'strengheid', tip: 'Stern → strengheid (strictness)', fr: 'Rigueur' },
+      { type: 'fill', text: 'Collectieve __________ bepalen salarissen en werkvoorwaarden voor hele sectoren.', ans: 'contracten', tip: 'Collective agreements = cao\'s', fr: 'Contrats' },
+      { type: 'fill', text: 'Gig economy arbeiders hebben vaak geen __________ zoals ziekteverzekering.', ans: 'benefits', tip: 'Voordelen/perks', fr: 'Avantages' },
+      { type: 'fill', text: 'Reskilling-programma\'s helpen werknemers __________ naar groeiende sectoren.', ans: 'overstappen', tip: 'Move to/transition', fr: 'Passer à' },
+      { type: 'fill', text: 'De __________ van werknemers in traditionele industrie is zorgwekkend gedaald.', ans: 'werkgelegenheid', tip: 'Employment rate = tewerkstellingsgraad', fr: 'L\'emploi' },
+      
+      // ORDER
+      { type: 'order', text: 'Zet in juiste volgorde (SUBORDONNÉE COMPLEX):', words: ['Hoewel', 'automatisering', 'banen', 'vervangt,', 'creëert', 'digitalisering', 'ook', 'nieuwe', 'werkgelegenheid', 'in', 'groene', 'sectoren'], correct: 'Hoewel automatisering banen vervangt, creëert digitalisering ook nieuwe werkgelegenheid in groene sectoren', fr: 'Bien que l\'automatisation' },
+      { type: 'order', text: 'Zet in juiste volgorde (INFINITIEF):', words: ['Werknemers', 'moeten', 'voortdurend', 'hun', 'vaardigheden', 'kunnen', 'verbeteren', 'om', 'werkzaam', 'te', 'blijven'], correct: 'Werknemers moeten voortdurend hun vaardigheden kunnen verbeteren om werkzaam te blijven', fr: 'Les travailleurs doivent continuer' },
+      
+      // INTRUS
+      { type: 'intrus', text: 'Welk woord past NIET semantisch? werknemer — werkgever — competentie — vakbond', opts: ['werknemer', 'werkgever', 'competentie', 'vakbond'], ans: 'competentie', fr: 'Competentie = skill, anderen = actors' },
+      { type: 'intrus', text: 'Welk woord past NIET thematisch? scholing — training — reskilling — werkloosheid', opts: ['scholing', 'training', 'reskilling', 'werkloosheid'], ans: 'werkloosheid', fr: 'Werkloosheid = outcome, anderen = solutions' },
+      { type: 'intrus', text: 'Welk woord past NIET? tech-sector — gezondheidszorg — groene sector — werkzekerheid', opts: ['tech-sector', 'gezondheidszorg', 'groene sector', 'werkzekerheid'], ans: 'werkzekerheid', fr: 'Werkzekerheid = concept, anderen = industries' },
+      { type: 'intrus', text: 'Welk woord past NIET? digitalisering — automatisering — robotisering — cao', opts: ['digitalisering', 'automatisering', 'robotisering', 'cao'], ans: 'cao', fr: 'Cao = contract, anderen = technologie' },
+      
+      // QCM
+      { type: 'qcm', text: 'Wat veroorzaakt transformatie van arbeidsmarkt primair?', opts: ['Vakbonden eisen meer loon', 'Digitalisering en automatisering', 'Werkgevers willen meer uren'], ans: 'Digitalisering en automatisering', fr: 'Transformation technologique' },
+      { type: 'qcm', text: 'Welke sectoren groeien het snelst?', opts: ['Traditionele industrie', 'Tech, gezondheidszorg en groene sectoren', 'Textiel en staalproductie'], ans: 'Tech, gezondheidszorg en groene sectoren', fr: 'Secteurs technologiques et santé' }
+    ];
+
+    const questions = questionsRaw.sort(() => Math.random() - 0.5);
+
+    let currentQ = 0;
+    let score = 0;
+
+    function renderVocab(data, elementId) {
+      const html = data.map(v => {
+        if (v.def) {
+          return `<div class="vocab-item"><div><div class="nl">${v.nl}</div><div style="font-size: 10px; color: #999; margin-top: 3px;">${v.def}</div></div><div class="fr">${v.fr}</div></div>`;
+        } else {
+          return `<div class="vocab-item"><div class="nl">${v.nl}</div><div class="fr">${v.fr}</div></div>`;
+        }
+      }).join('');
+      document.getElementById(elementId).innerHTML = html;
+    }
+
+    function renderAllVocab() {
+      renderVocab(vocabMust, 'vocabMust');
+      renderVocab(vocabAction, 'vocabAction');
+      renderVocab(vocabExpr, 'vocabExpr');
+      renderVocab(vocabNice, 'vocabNice');
+      renderVocab(vocabAutres, 'vocabAutres');
+      renderVocab(vocabAcronyms, 'vocabAcronyms');
+      renderVocab(vocabC2, 'vocabC2');
+    }
+
+    function startVocab() {
+      document.getElementById('introSection').classList.remove('active');
+      document.getElementById('vocabSection').classList.add('active');
+      renderAllVocab();
+    }
+
+    function gotoTest() {
+      document.getElementById('vocabSection').classList.remove('active');
+      document.getElementById('testSection').classList.add('active');
+      renderQuestion(0);
+    }
+
+    function renderQuestion(idx) {
+      currentQ = idx;
+      const q = questions[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('questionType').textContent = q.type.toUpperCase();
+      document.getElementById('feedbackArea').innerHTML = '';
+      document.getElementById('tipArea').innerHTML = '';
+      
+      let content = '';
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        content = `<div class="question-text">${q.text}</div>`;
+        content += q.opts.map((o, i) => `<div class="option"><input type="radio" name="ans" value="${o}" id="opt${i}"><label for="opt${i}">${o}</label></div>`).join('');
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'fill') {
+        content = `<div class="question-text">${q.text}</div><input type="text" class="input-field" id="fillInput" placeholder="Type het antwoord">`;
+        if (q.tip) document.getElementById('tipArea').innerHTML = `<button class="btn-tip" onclick="showTip(${idx})">Tip</button>`;
+        content += `<button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      } else if (q.type === 'order') {
+        const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        content = `<div class="question-text">${q.text}</div><div class="drop-zone" id="dropZone">Sleep woorden hier</div><div id="wordBank" style="display: flex; flex-wrap: wrap; gap: 8px;">`;
+        shuffled.forEach((w, i) => {
+          content += `<span class="word-item" draggable="true" id="word${i}">${w}</span>`;
+        });
+        content += `</div><button class="btn btn-primary" onclick="checkAnswer(${idx})">Controleer</button>`;
+      }
+      
+      document.getElementById('questionContent').innerHTML = content;
+      
+      if (q.type === 'order') {
+        setupDragDrop();
+      }
+      
+      document.getElementById('nextBtn').disabled = true;
+    }
+
+    function showTip(idx) {
+      const q = questions[idx];
+      document.getElementById('tipArea').innerHTML = `<div class="tip-box"><strong>Tip:</strong> ${q.tip}</div>`;
+    }
+
+    let draggedElement = null;
+
+    function setupDragDrop() {
+      const zone = document.getElementById('dropZone');
+      
+      document.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('word-item')) {
+          draggedElement = e.target;
+          e.dataTransfer.effectAllowed = 'move';
+          e.target.style.opacity = '0.5';
+        }
+      });
+
+      document.addEventListener('dragend', (e) => {
+        if (e.target.classList.contains('word-item')) {
+          e.target.style.opacity = '1';
+          draggedElement = null;
+        }
+      });
+
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', (e) => {
+        if (e.target === zone) {
+          zone.classList.remove('drag-over');
+        }
+      });
+
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        if (draggedElement && draggedElement.parentNode !== zone) {
+          draggedElement.classList.add('placed');
+          zone.appendChild(draggedElement);
+        }
+      });
+    }
+
+    function checkAnswer(idx) {
+      const q = questions[idx];
+      let answer = '';
+      let isCorrect = false;
+
+      if (q.type === 'qcm' || q.type === 'intrus') {
+        const selected = document.querySelector('input[name="ans"]:checked');
+        if (!selected) return;
+        answer = selected.value;
+        isCorrect = answer === q.ans;
+      } else if (q.type === 'fill') {
+        answer = document.getElementById('fillInput').value.trim();
+        isCorrect = answer.toLowerCase() === q.ans.toLowerCase();
+      } else if (q.type === 'order') {
+        const zone = document.getElementById('dropZone');
+        const placed = Array.from(zone.querySelectorAll('.word-item')).map(w => w.textContent).join(' ');
+        answer = placed || '';
+        isCorrect = answer === q.correct;
+      }
+
+      if (isCorrect) score++;
+
+      const feedback = `<div class="feedback ${isCorrect ? 'correct' : 'incorrect'}"><div class="feedback-title">${isCorrect ? '✓ Correct!' : '✗ Fout'}</div><div class="feedback-text"><strong>Antwoord:</strong> ${isCorrect ? (q.ans || q.correct) : 'Incorrect'}</div><div class="feedback-text traduction"><strong>Traduction:</strong> ${q.fr}</div></div>`;
+      document.getElementById('feedbackArea').innerHTML = feedback;
+      document.getElementById('nextBtn').disabled = false;
+    }
+
+    function nextQ() {
+      if (currentQ < questions.length - 1) {
+        renderQuestion(currentQ + 1);
+      } else {
+        document.getElementById('testSection').classList.remove('active');
+        document.getElementById('readingSection').classList.add('active');
+        renderReading();
+      }
+    }
+
+    function prevQ() {
+      if (currentQ > 0) renderQuestion(currentQ - 1);
+    }
+
+    function skipQuestion() {
+      nextQ();
+    }
+
+    function renderReading() {
+      const reading = `
+        <h3>Werk in 2026: Uitdagingen en Mogelijkheden</h3>
+        <p>De arbeidsmarkt transformeert sneller dan ooit. Automatisering en AI vervangen routinewerk maar creëren ook vraag naar nieuwe vaardigheden. Tech- en groene sectoren groeien exponentieel. Tegelijkertijd vecht het traditionele industrie tegen ineenstorting. Vakbonden betwisten arbeidsrechtveranderingen die werknemersbescherming beperken, maar erkennen ook dat reskilling onvermijdelijk is.</p>
+        
+        <p>Scholingsprogramma\'s en soft skills zijn niet langer luxe maar noodzaak. Werkzekerheid is een relatie geworden, niet garantie. Werkgelegenheid creëren vereist investeringen in competentievorming. Zonder vastbeslotenheid zullen veel werknemers achter raken op de arbeidsmarkt.</p>
+        
+        <div class="comprehension">
+          <div class="comprehension-q">
+            <strong>1. Welke sectoren groeien snelst?</strong><br>
+            <input type="radio" name="comp1" value="a"> Textiel en staal<br>
+            <input type="radio" name="comp1" value="b"> Tech, gezondheidszorg en groene sectoren<br>
+            <input type="radio" name="comp1" value="c"> Traditionele handel
+          </div>
+          <div class="comprehension-q">
+            <strong>2. Wat is cruciaal voor succes op arbeidsmarkt?</strong><br>
+            <input type="radio" name="comp2" value="a"> Alleen technisch kennis<br>
+            <input type="radio" name="comp2" value="b"> Alleen werkgevervoorkeuren<br>
+            <input type="radio" name="comp2" value="c"> Scholing en soft skills
+          </div>
+          <div class="comprehension-q">
+            <strong>3. Wat betekent werkzekerheid in 2026?</strong><br>
+            <input type="radio" name="comp3" value="a"> Levenslange baan bij één bedrijf<br>
+            <input type="radio" name="comp3" value="b"> Voortdurende scholing en adaptatie<br>
+            <input type="radio" name="comp3" value="c"> Niemand kan meer ontslag krijgen
+          </div>
+        </div>
+
+        <div class="required-words">
+          <strong>Schrijf je mening (3-5 lijnen):</strong><br>
+          <p style="font-size: 12px; margin-top: 0.5rem; color: #666;">Je MOET deze woorden gebruiken:</p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• scholing</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• competentie</strong></p>
+          <p style="font-size: 12px; color: #1976d2; margin: 0.25rem 0;"><strong>• automatisering</strong></p>
+          <textarea class="textarea-field" id="opinionText" placeholder="Schrijf hier je mening..."></textarea>
+        </div>
+      `;
+      document.getElementById('readingContent').innerHTML = reading;
+    }
+
+    function gotoResults() {
+      const opinion = document.getElementById('opinionText').value.trim();
+      const hasScholing = opinion.toLowerCase().includes('scholing');
+      const hasCompetentie = opinion.toLowerCase().includes('competentie');
+      const hasAutomatisering = opinion.toLowerCase().includes('automatisering');
+      
+      const wordCheck = `<div style="background: #f9f9f9; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+        <strong>Vereiste woorden:</strong><br>
+        <span style="color: ${hasScholing ? '#4caf50' : '#f44336'};">• scholing: ${hasScholing ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasCompetentie ? '#4caf50' : '#f44336'};">• competentie: ${hasCompetentie ? '✓' : '✗'}</span><br>
+        <span style="color: ${hasAutomatisering ? '#4caf50' : '#f44336'};">• automatisering: ${hasAutomatisering ? '✓' : '✗'}</span>
+      </div>`;
+
+      document.getElementById('readingSection').classList.remove('active');
+      document.getElementById('resultsSection').classList.add('active');
+      
+      const percent = Math.round((score / questions.length) * 100);
+      document.getElementById('scoreNum').textContent = score + '/20 (' + percent + '%)';
+      
+      let msg = '';
+      if (percent >= 70) {
+        msg = '✓ Uitstekend! Ga door naar Dag 4.';
+        document.getElementById('resultsBox').className = 'results excellent';
+      } else if (percent >= 56) {
+        msg = '→ Goed! Maar herhaal moeilijke vragen.';
+        document.getElementById('resultsBox').className = 'results good';
+      } else {
+        msg = '✗ Meer oefening nodig. Probeer opnieuw.';
+        document.getElementById('resultsBox').className = 'results weak';
+      }
+      document.getElementById('scoreMsg').textContent = msg + wordCheck;
+    }
+
+    function restart() {
+      location.reload();
+    }
+
+    const secretPhrases = [
+      "On est fier de toi. 💙",
+      "On t'aime très fort. 💛",
+      "Tu es fantastique! ✨",
+      "Tu vas y arriver! 🚀",
+      "Prends soin de toi. 🌸",
+      "Repose toi quand tu en as besoin. 💤",
+      "Aujourd'hui, fais toi plaisir. 🎉",
+      "Dors un peu quand tu es fatiguée. 🌙"
+    ];
+
+    function getRandomPhrase() {
+      const today = new Date().toISOString().split('T')[0];
+      const lastDate = localStorage.getItem('lastSecretPhraseDate');
+      const lastPhrase = localStorage.getItem('lastSecretPhrase');
+
+      if (lastDate !== today) {
+        let newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+        if (lastPhrase) {
+          while (newPhrase === lastPhrase) {
+            newPhrase = secretPhrases[Math.floor(Math.random() * secretPhrases.length)];
+          }
+        }
+        localStorage.setItem('lastSecretPhraseDate', today);
+        localStorage.setItem('lastSecretPhrase', newPhrase);
+        return newPhrase;
+      }
+      return lastPhrase || secretPhrases[0];
+    }
+
+    function getRandomPosition() {
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function displaySecretPhrase() {
+      const phrase = getRandomPhrase();
+      const position = getRandomPosition();
+      const boxId = 'secretPhrasePos' + position;
+      const box = document.getElementById(boxId);
+      if (box) {
+        box.innerHTML = '<div class="secret-phrase-box">' + phrase + '</div>';
+      }
+    }
+
+    displaySecretPhrase();
+  </script>
+</body>
+</html>
